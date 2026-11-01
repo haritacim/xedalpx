@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TUSCO Rental Service | Dalyan - Web Sitemiz Bakımdadır / Under Maintenance</title>
+    <meta name="description" content="TUSCO Rental Service Dalyan, Ortaca, Muğla. Web sitemiz şu anda bakımdadır. İletişim: +90 539 543 07 77">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts: Inter, Outfit & Noto Sans JP -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans JP', 'sans-serif'],
+                        display: ['Outfit', 'Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        dalyan: {
+                            teal: '#14b8a6',
+                            amber: '#f59e0b',
+                            gold: '#fbbf24',
+                            deep: '#042f2e'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Dalyan Arka Plan Katmanı - Hem anlaşılır hem de yazıları okunaklı kılan hafif blur */
+        .dalyan-bg-image {
+            background-image: 
+                url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Dalyan_rock_tombs_from_river.jpg/1920px-Dalyan_rock_tombs_from_river.jpg'),
+                url('https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1920&q=85');
+            background-size: cover;
+            background-position: center 35%;
+            background-repeat: no-repeat;
+            filter: blur(3.5px) brightness(0.82) saturate(1.18);
+            transform: scale(1.04); /* Blur kenar boşluklarını engeller */
+            transition: filter 0.5s ease;
+        }
+
+        /* Glassmorphism Kart Stilleri */
+        .glass-panel {
+            background: rgba(10, 25, 36, 0.62);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+        }
+
+        .glass-card-lang {
+            background: rgba(15, 32, 43, 0.58);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card-lang:hover, .glass-card-lang.active-lang {
+            background: rgba(20, 48, 62, 0.80);
+            border-color: rgba(251, 191, 36, 0.55);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(251, 191, 36, 0.15);
+        }
+
+        /* Domain Kutusu Parlama Efekti */
+        .domain-glow {
+            background: linear-gradient(135deg, rgba(15, 35, 48, 0.85) 0%, rgba(9, 25, 36, 0.92) 100%);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1.5px solid rgba(251, 191, 36, 0.55);
+            box-shadow: 0 0 35px rgba(20, 184, 166, 0.25), 0 10px 30px rgba(0, 0, 0, 0.55);
+        }
+
+        /* Dişli Çark Animasyonu */
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: spin-slow 12s linear infinite;
+        }
+
+        /* Özel Kaydırma Çubuğu */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #071921;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #14b8a6;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="min-h-screen w-full text-white font-sans relative overflow-x-hidden flex flex-col justify-between selection:bg-amber-400 selection:text-slate-950">
+
+    <!-- ARKA PLAN: Dalyan Kral Mezarları & Nehir Manzarasının Blurlu ve Anlaşılır Görseli -->
+    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <!-- Gerçek Dalyan Fotoğraf Katmanı -->
+        <div id="bgLayer" class="dalyan-bg-image absolute inset-0 w-full h-full"></div>
+
+        <!-- Yedek & Estetik Dalyan Silüet Katmanı (Kral Mezarları ve Nehir atmosferini güçlendirir) -->
+        <svg class="absolute bottom-0 left-0 w-full h-48 opacity-20 pointer-events-none" viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <path fill="#042f2e" fill-opacity="0.9" d="M0,192L60,197.3C120,203,240,213,360,197.3C480,181,600,139,720,138.7C840,139,960,181,1080,197.3C1200,213,1320,203,1380,197.3L1440,192L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
+        </svg>
+
+        <!-- Okunabilirliği Artıran Hafif Karartma Gradyanı (Fotoğrafı kapatmaz, yazıları netleştirir) -->
+        <div class="absolute inset-0 bg-gradient-to-b from-slate-950/65 via-slate-900/40 to-slate-950/85"></div>
+    </div>
+
+    <!-- ÜST BAR: Marka Logosu & Dalyan Konum Rozeti -->
+    <header class="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 pt-5 pb-2 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3.5">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-teal-500 p-0.5 shadow-lg shadow-teal-950/50">
+                <div class="w-full h-full bg-slate-950/90 rounded-[14px] flex items-center justify-center relative">
+                    <i class="fa-solid fa-car-side text-amber-400 text-lg"></i>
+                    <i class="fa-solid fa-gear text-teal-300 text-xs absolute -top-1 -right-1 bg-slate-900 rounded-full p-1 animate-spin-slow"></i>
+                </div>
+            </div>
+            <div>
+                <h1 class="font-display font-extrabold text-xl sm:text-2xl tracking-wider text-white flex items-center gap-2">
+                    TUSCO <span class="text-amber-400 font-semibold">RENTAL SERVICE</span>
+                </h1>
+                <p class="text-xs text-teal-200/90 tracking-wide flex items-center gap-1.5">
+                    <i class="fa-solid fa-location-dot text-amber-400"></i>
+                    Dalyan, Ortaca / Muğla
+                </p>
+            </div>
+        </div>
+
+        <!-- Sağ Üst: Canlı Durum & Arka Plan Netlik Kontrolü -->
+        <div class="flex items-center gap-2.5">
+            <div class="glass-panel px-3.5 py-1.5 rounded-full flex items-center gap-2 text-xs sm:text-sm font-medium text-amber-200">
+                <span class="relative flex h-2.5 w-2.5">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-400"></span>
+                </span>
+                <span>Bakım Modu / Maintenance</span>
+            </div>
+            <button id="toggleBlurBtn" onclick="toggleBackgroundClarity()" title="Arka Plan Dalyan Görselini Netleştir / Bulanıklaştır" class="glass-panel hover:border-amber-400/60 px-3 py-1.5 rounded-full text-xs text-slate-200 flex items-center gap-1.5 transition cursor-pointer">
+                <i class="fa-solid fa-mountain-sun text-teal-300"></i>
+                <span class="hidden sm:inline" id="blurBtnText">Dalyan Manzarası</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- ANA İÇERİK: 5 Dilde Bakım Bildirimi + Ortadan Biraz Aşağıda Domain Adresi -->
+    <main class="relative z-10 flex-grow flex flex-col justify-center items-center w-full max-w-5xl mx-auto px-4 sm:px-6 py-4">
+        
+        <!-- Seçili Dil Vurgu Başlığı -->
+        <div class="glass-panel rounded-3xl p-5 sm:p-7 w-full text-center shadow-2xl mb-5 border border-white/15">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-400/15 border border-amber-400/30 text-amber-300 text-xs font-semibold uppercase tracking-widest mb-3">
+                <i class="fa-solid fa-screwdriver-wrench animate-bounce"></i>
+                <span id="spotlightBadge">SİSTEM YENİLENİYOR • SYSTEM UPGRADE</span>
+            </div>
+
+            <!-- Ana Aktif Mesaj (Tıklanan veya otomatik dönen dil burada büyük görünür, altında 5 dilin tamamı aynı anda listelenir) -->
+            <h2 id="spotlightTitle" class="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-tight mb-2 transition-all duration-300">
+                Web sitemiz şu anda bakımdadır.
+            </h2>
+            <p id="spotlightSub" class="text-sm sm:text-base text-slate-200 max-w-2xl mx-auto">
+                En kısa sürede yenilenmiş yüzümüzle tekrar hizmetinizdeyiz!
+            </p>
+        </div>
+
+        <!-- 5 DİLİN TAMAMI (Türkçe, İngilizce, Rusça, Almanca, Japonca) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3 w-full mb-6">
+            
+            <!-- 1. TÜRKÇE -->
+            <div onclick="highlightLang(0)" id="lang-card-0" class="glass-card-lang active-lang lg:col-span-2 rounded-2xl p-4 cursor-pointer flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-400">
+                        <span class="text-base">🇹🇷</span> Türkçe
+                    </span>
+                    <span class="text-[11px] px-2 py-0.5 rounded-full bg-white/10 text-slate-300">TR</span>
+                </div>
+                <p class="text-sm sm:text-[15px] font-medium text-white leading-snug">
+                    Web sitemiz şu anda bakımdadır. En kısa sürede yenilenmiş yüzümüzle tekrar hizmetinizdeyiz!
+                </p>
+            </div>
+
+            <!-- 2. ENGLISH -->
+            <div onclick="highlightLang(1)" id="lang-card-1" class="glass-card-lang lg:col-span-2 rounded-2xl p-4 cursor-pointer flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-teal-300">
+                        <span class="text-base">🇬🇧</span> English
+                    </span>
+                    <span class="text-[11px] px-2 py-0.5 rounded-full bg-white/10 text-slate-300">EN</span>
+                </div>
+                <p class="text-sm sm:text-[15px] font-medium text-white leading-snug">
+                    Our website is currently under maintenance. We will be back shortly!
+                </p>
+            </div>
+
+            <!-- 3. РУССКИЙ (RUSSIAN) -->
+            <div onclick="highlightLang(2)" id="lang-card-2" class="glass-card-lang lg:col-span-2 rounded-2xl p-4 cursor-pointer flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-sky-300">
+                        <span class="text-base">🇷🇺</span> Русский
+                    </span>
+                    <span class="text-[11px] px-2 py-0.5 rounded-full bg-white/10 text-slate-300">RU</span>
+                </div>
+                <p class="text-sm sm:text-[15px] font-medium text-white leading-snug">
+                    Наш сайт сейчас находится на техническом обслуживании. Скоро мы снова будем с вами!
+                </p>
+            </div>
+
+            <!-- 4. DEUTSCH (GERMAN) -->
+            <div onclick="highlightLang(3)" id="lang-card-3" class="glass-card-lang lg:col-span-3 rounded-2xl p-4 cursor-pointer flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-300">
+                        <span class="text-base">🇩🇪</span> Deutsch
+                    </span>
+                    <span class="text-[11px] px-2 py-0.5 rounded-full bg-white/10 text-slate-300">DE</span>
+                </div>
+                <p class="text-sm sm:text-[15px] font-medium text-white leading-snug">
+                    Unsere Website wird derzeit gewartet. Wir sind in Kürze wieder für Sie da!
+                </p>
+            </div>
+
+            <!-- 5. 日本語 (JAPANESE) -->
+            <div onclick="highlightLang(4)" id="lang-card-4" class="glass-card-lang lg:col-span-3 rounded-2xl p-4 cursor-pointer flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-rose-300">
+                        <span class="text-base">🇯🇵</span> 日本語
+                    </span>
+                    <span class="text-[11px] px-2 py-0.5 rounded-full bg-white/10 text-slate-300">JP</span>
+                </div>
+                <p class="text-sm sm:text-[15px] font-medium text-white leading-snug">
+                    現在、ウェブサイトのメンテナンスを行っております。まもなく再開いたしますので、今しばらくお待ちください。
+                </p>
+            </div>
+
+        </div>
+
+        <!-- SAYFANIN ORTASINDAN BİRAZ AŞAĞIDA YER ALAN DOMAİN ADRESİ BÖLÜMÜ -->
+        <div class="w-full flex flex-col items-center justify-center mt-2 mb-2">
+            <div class="domain-glow rounded-2xl px-6 py-4 sm:px-10 sm:py-5 flex flex-col sm:flex-row items-center gap-3 sm:gap-5 max-w-xl w-full justify-between transition transform hover:scale-[1.01]">
+                <div class="flex items-center gap-3.5 text-center sm:text-left">
+                    <div class="w-11 h-11 rounded-xl bg-amber-400/20 border border-amber-400/40 flex items-center justify-center text-amber-300 shrink-0">
+                        <i class="fa-solid fa-globe text-xl animate-pulse"></i>
+                    </div>
+                    <div>
+                        <span class="text-[11px] uppercase tracking-widest text-teal-300 font-semibold block">
+                            Resmi Web Adresimiz • Official Domain
+                        </span>
+                        <span id="domainDisplay" class="font-display text-lg sm:text-2xl font-bold tracking-wide text-white break-all">
+                            www.tuscorentalservice.com
+                        </span>
+                    </div>
+                </div>
+
+                <button onclick="copyDomainAddress()" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-amber-400 hover:text-slate-950 text-xs font-semibold text-slate-200 transition flex items-center gap-1.5 shrink-0 cursor-pointer">
+                    <i id="copyIcon" class="fa-regular fa-copy"></i>
+                    <span id="copyText">Adresi Kopyala</span>
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ALT TARAF: İLETİŞİM NUMARALARI, MAİL VE ADRES BİLGİLERİ -->
+    <footer class="relative z-10 w-full mt-auto pt-2 pb-5 px-4 sm:px-6">
+        <div class="max-w-5xl mx-auto glass-panel rounded-3xl p-4 sm:p-6 shadow-2xl border border-white/20">
+            
+            <div class="text-center mb-4">
+                <p class="text-xs sm:text-sm uppercase tracking-widest text-amber-300 font-semibold">
+                    7/24 İletişim & Rezervasyon • Contact Us Directly
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 items-stretch">
+                
+                <!-- TELEFON & WHATSAPP -->
+                <div class="bg-slate-900/75 border border-white/10 rounded-2xl p-4 flex flex-col justify-between hover:border-teal-400/50 transition">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-10 rounded-xl bg-teal-500/20 border border-teal-400/30 flex items-center justify-center text-teal-300 shrink-0">
+                            <i class="fa-solid fa-phone-volume text-lg"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs text-slate-400 block">Telefon / WhatsApp</span>
+                            <a href="tel:+905395430777" class="font-display font-bold text-base sm:text-lg text-white hover:text-amber-300 transition">
+                                +90 539 543 07 77
+                            </a>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <a href="tel:+905395430777" class="py-2 px-3 rounded-xl bg-teal-600/80 hover:bg-teal-500 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition">
+                            <i class="fa-solid fa-phone"></i> Hemen Ara
+                        </a>
+                        <a href="https://wa.me/905395430777" target="_blank" rel="noopener noreferrer" class="py-2 px-3 rounded-xl bg-emerald-600/80 hover:bg-emerald-500 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition">
+                            <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
+                        </a>
+                    </div>
+                </div>
+
+                <!-- E-POSTA ADRESİ -->
+                <div class="bg-slate-900/75 border border-white/10 rounded-2xl p-4 flex flex-col justify-between hover:border-amber-400/50 transition">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-300 shrink-0">
+                            <i class="fa-solid fa-envelope-open-text text-lg"></i>
+                        </div>
+                        <div class="overflow-hidden">
+                            <span class="text-xs text-slate-400 block">E-Posta / E-Mail</span>
+                            <a href="mailto:tuscorenralservice@gmail.com" class="font-display font-bold text-sm sm:text-base text-white hover:text-amber-300 transition truncate block" title="tuscorenralservice@gmail.com">
+                                tuscorenralservice@gmail.com
+                            </a>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <a href="mailto:tuscorenralservice@gmail.com" class="py-2 px-3 rounded-xl bg-amber-500/80 hover:bg-amber-400 text-slate-950 text-xs font-bold flex items-center justify-center gap-1.5 transition">
+                            <i class="fa-solid fa-paper-plane"></i> Mail Gönder
+                        </a>
+                        <button onclick="copyEmailAddress()" class="py-2 px-3 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer">
+                            <i id="emailCopyIcon" class="fa-regular fa-copy"></i> <span id="emailCopyText">Kopyala</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KONUM / ADRES -->
+                <div class="bg-slate-900/75 border border-white/10 rounded-2xl p-4 flex flex-col justify-between hover:border-sky-400/50 transition">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-10 rounded-xl bg-sky-500/20 border border-sky-400/30 flex items-center justify-center text-sky-300 shrink-0">
+                            <i class="fa-solid fa-map-location-dot text-lg"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs text-slate-400 block">Adres / Location</span>
+                            <span class="font-display font-bold text-base sm:text-lg text-white block">
+                                Dalyan, Ortaca / Muğla
+                            </span>
+                        </div>
+                    </div>
+                    <a href="https://www.google.com/maps/search/?api=1&query=Dalyan+Ortaca+Mugla" target="_blank" rel="noopener noreferrer" class="w-full py-2 px-3 rounded-xl bg-sky-600/80 hover:bg-sky-500 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition">
+                        <i class="fa-solid fa-location-arrow"></i> Haritada Göster (Google Maps)
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- Alt Telif Satırı -->
+            <div class="mt-4 pt-3 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-2">
+                <span>© <span id="currentYear">2026</span> <strong class="text-slate-200">TUSCO Rental Service</strong> • Dalyan, Ortaca, Muğla</span>
+                <span class="flex items-center gap-3">
+                    <span>🇹🇷</span><span>🇬🇧</span><span>🇷🇺</span><span>🇩🇪</span><span>🇯🇵</span>
+                </span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT: Otomatik Domain Algılama, 5 Dil Döngüsü ve Kopyalama İşlevleri -->
+    <script>
+        // 5 Dilde Başlık ve Alt Metin Verileri
+        const translations = [
+            {
+                lang: "Türkçe",
+                title: "Web sitemiz şu anda bakımdadır.",
+                sub: "En kısa sürede yenilenmiş yüzümüzle tekrar hizmetinizdeyiz!"
+            },
+            {
+                lang: "English",
+                title: "Our website is currently under maintenance.",
+                sub: "We will be back shortly! Feel free to contact us via phone, WhatsApp or email."
+            },
+            {
+                lang: "Русский",
+                title: "Наш сайт сейчас находится на техническом обслуживании.",
+                sub: "Скоро мы снова будем с вами! Свяжитесь с нами по телефону или WhatsApp."
+            },
+            {
+                lang: "Deutsch",
+                title: "Unsere Website wird derzeit gewartet.",
+                sub: "Wir sind in Kürze wieder für Sie da! Kontaktieren Sie uns gerne direkt."
+            },
+            {
+                lang: "日本語",
+                title: "現在、ウェブサイトのメンテナンスを行っております。",
+                sub: "まもなく再開いたしますので、今しばらくお待ちください。"
+            }
+        ];
+
+        let currentLangIndex = 0;
+        let cycleInterval = null;
+        let isSharpBg = false;
+
+        // Domain Adresini Otomatik Algıla (Eğer yerel dosyada veya önizlemede açılırsa varsayılan domaini gösterir)
+        function initDomainDisplay() {
+            const domainEl = document.getElementById('domainDisplay');
+            const host = window.location.hostname;
+            
+            // Gerçek bir domainde yayındaysa doğrudan bağlanan domaini göster
+            if (host && host !== 'localhost' && host !== '127.0.0.1' && !host.includes('usercontent.goog') && !host.includes('scf.usercontent')) {
+                domainEl.textContent = host.startsWith('www.') ? host : host;
+            } else {
+                // Önizleme veya yerel dosya açılışında gösterilecek domain
+                domainEl.textContent = 'www.tuscorentalservice.com';
+            }
+
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+        }
+
+        // Seçili Dili Üst Vurgu Alanında Göster
+        function highlightLang(index) {
+            currentLangIndex = index;
+            const item = translations[index];
+
+            const titleEl = document.getElementById('spotlightTitle');
+            const subEl = document.getElementById('spotlightSub');
+
+            titleEl.textContent = item.title;
+            subEl.textContent = item.sub;
+
+            // Kartların aktif çerçevesini güncelle
+            for (let i = 0; i < 5; i++) {
+                const card = document.getElementById('lang-card-' + i);
+                if (i === index) {
+                    card.classList.add('active-lang');
+                } else {
+                    card.classList.remove('active-lang');
+                }
+            }
+        }
+
+        // Arka plandaki Dalyan resminin bulanıklığını değiştirme (isteğe bağlı önizleme butonu)
+        function toggleBackgroundClarity() {
+            const bg = document.getElementById('bgLayer');
+            const btnText = document.getElementById('blurBtnText');
+            isSharpBg = !isSharpBg;
+
+            if (isSharpBg) {
+                bg.style.filter = 'blur(0.5px) brightness(0.88) saturate(1.2)';
+                btnText.textContent = 'Hafif Blur Yap';
+            } else {
+                bg.style.filter = 'blur(3.5px) brightness(0.82) saturate(1.18)';
+                btnText.textContent = 'Dalyan Manzarası';
+            }
+        }
+
+        // Panoya Kopyalama Yardımcı Fonksiyonu
+        function copyTextToClipboard(text, callback) {
+            const tempInput = document.createElement('textarea');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            try {
+                document.execCommand('copy');
+                callback(true);
+            } catch (err) {
+                callback(false);
+            }
+            document.body.removeChild(tempInput);
+        }
+
+        // Domain Adresini Kopyala
+        function copyDomainAddress() {
+            const domainText = document.getElementById('domainDisplay').textContent.trim();
+            copyTextToClipboard(domainText, function() {
+                const copyTextEl = document.getElementById('copyText');
+                const copyIconEl = document.getElementById('copyIcon');
+                copyTextEl.textContent = 'Kopyalandı!';
+                copyIconEl.className = 'fa-solid fa-check text-amber-400';
+                setTimeout(() => {
+                    copyTextEl.textContent = 'Adresi Kopyala';
+                    copyIconEl.className = 'fa-regular fa-copy';
+                }, 2000);
+            });
+        }
+
+        // E-Posta Adresini Kopyala
+        function copyEmailAddress() {
+            copyTextToClipboard('tuscorenralservice@gmail.com', function() {
+                const emailTextEl = document.getElementById('emailCopyText');
+                const emailIconEl = document.getElementById('emailCopyIcon');
+                emailTextEl.textContent = 'Kopyalandı!';
+                emailIconEl.className = 'fa-solid fa-check text-amber-400';
+                setTimeout(() => {
+                    emailTextEl.textContent = 'Kopyala';
+                    emailIconEl.className = 'fa-regular fa-copy';
+                }, 2000);
+            });
+        }
+
+        // Sayfa yüklendiğinde başlat
+        window.onload = function() {
+            initDomainDisplay();
+            // Her 4.5 saniyede bir üstteki ana başlığı 5 dil arasında sırayla döndürür
+            cycleInterval = setInterval(() => {
+                const nextIndex = (currentLangIndex + 1) % translations.length;
+                highlightLang(nextIndex);
+            }, 4500);
+        };
+    </script>
+</body>
+</html>
