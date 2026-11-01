@@ -1,0 +1,1974 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kafe POS & Gelir Takip Sistemi</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Space Mono (Fiş için) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
+                    },
+                    colors: {
+                        cafe: {
+                            950: '#0c0b0a',
+                            900: '#161412',
+                            800: '#221f1c',
+                            700: '#332e2a',
+                            600: '#4a433d',
+                            amber: '#f59e0b',
+                            amberHover: '#d97706',
+                            cream: '#fef3c7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Özel Kaydırma Çubuğu */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #161412;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #332e2a;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f59e0b;
+        }
+
+        /* Gündüz (Light) Modu Tema Uyarlamaları */
+        html:not(.dark) body {
+            background-color: #f8f5f0 !important;
+            color: #1c1917 !important;
+        }
+        html:not(.dark) ::-webkit-scrollbar-track {
+            background: #ebe5dc;
+        }
+        html:not(.dark) ::-webkit-scrollbar-thumb {
+            background: #c7bdb1;
+        }
+        html:not(.dark) .bg-cafe-950 {
+            background-color: #f4efe6 !important;
+        }
+        html:not(.dark) .bg-cafe-900 {
+            background-color: #ffffff !important;
+        }
+        html:not(.dark) .bg-cafe-800 {
+            background-color: #ede6da !important;
+        }
+        html:not(.dark) .bg-cafe-800\/50 {
+            background-color: rgba(237, 230, 218, 0.75) !important;
+        }
+        html:not(.dark) .border-cafe-700,
+        html:not(.dark) .border-cafe-800 {
+            border-color: #dcd3c6 !important;
+        }
+        html:not(.dark) .divide-cafe-800 > :not([hidden]) ~ :not([hidden]) {
+            border-color: #e5dec9 !important;
+        }
+        html:not(.dark) .text-white:not(.keep-white),
+        html:not(.dark) .text-stone-100:not(.keep-white),
+        html:not(.dark) .text-stone-200:not(.keep-white) {
+            color: #1c1917 !important;
+        }
+        html:not(.dark) .text-stone-300:not(.keep-white) {
+            color: #44403c !important;
+        }
+        html:not(.dark) .text-stone-400:not(.keep-white) {
+            color: #57534e !important;
+        }
+        html:not(.dark) .text-amber-400:not(.keep-amber) {
+            color: #b45309 !important;
+        }
+        html:not(.dark) .text-emerald-400:not(.keep-emerald) {
+            color: #047857 !important;
+        }
+        html:not(.dark) .text-sky-400 {
+            color: #0369a1 !important;
+        }
+
+        /* POS Alanı Zarif Kafe Arka Plan Dokusu */
+        .pos-textured-bg {
+            background-image: radial-gradient(rgba(245, 158, 11, 0.08) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* Dokunmatik Etkileşim İyileştirmeleri */
+        .touch-btn {
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            transition: transform 0.08s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+        }
+        .touch-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* Termal Yazıcı (@media print) Ayarları - 58mm / 80mm Uyumlu */
+        @media screen {
+            #thermal-receipt-container {
+                display: none;
+            }
+        }
+
+        @media print {
+            @page {
+                margin: 0;
+                size: 80mm auto;
+            }
+            html, body {
+                background: #ffffff !important;
+                color: #000000 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                font-family: 'Space Mono', monospace !important;
+            }
+            #app-shell, #toast-container, #modal-container, #confirm-modal {
+                display: none !important;
+            }
+            #thermal-receipt-container {
+                display: block !important;
+                width: 76mm !important;
+                max-width: 100% !important;
+                margin: 0 auto !important;
+                padding: 2mm 3mm !important;
+                color: #000 !important;
+                background: #fff !important;
+                font-size: 12px !important;
+                line-height: 1.35 !important;
+            }
+            .receipt-dashed {
+                border-top: 1px dashed #000 !important;
+                margin: 6px 0 !important;
+            }
+            .receipt-double {
+                border-top: 2px solid #000 !important;
+                border-bottom: 2px solid #000 !important;
+                padding: 4px 0 !important;
+                margin: 6px 0 !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-cafe-950 text-stone-100 font-sans antialiased h-screen overflow-hidden select-none transition-colors duration-200">
+
+    <!-- ANA UYGULAMA KABUĞU -->
+    <div id="app-shell" class="flex flex-col h-screen w-full">
+
+        <!-- ÜST MENÜ (HEADER) -->
+        <header class="bg-cafe-900 border-b border-cafe-700 px-4 py-3 flex flex-wrap items-center justify-between gap-4 shrink-0 z-20 shadow-sm">
+            <!-- Sol: Logo, Kafe Adı & BÜYÜK SAAT/TARİH (+10pt Büyütülmüş) -->
+            <div class="flex flex-wrap items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center shadow-lg shadow-amber-500/20 shrink-0">
+                        <i data-lucide="coffee" class="w-7 h-7 text-cafe-950 stroke-[2.5]"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h1 id="cafe-name-display" class="font-black text-lg sm:text-xl tracking-tight text-amber-400 cursor-pointer hover:underline" onclick="openCafeSettingsModal()" title="Kafe adını değiştirmek için tıklayın">ROAST & CRUST KAFE</h1>
+                            <button onclick="openCafeSettingsModal()" class="text-stone-400 hover:text-amber-400 p-1 rounded-lg" title="Fiş & Kafe Ayarları">
+                                <i data-lucide="settings" class="w-4 h-4"></i>
+                            </button>
+                            <!-- Bulut (Firebase) Senkronizasyon Durumu -->
+                            <div id="cloud-status-badge" class="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-[11px] font-bold text-amber-400">
+                                <span id="cloud-status-dot" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                                <span id="cloud-status-text">Bulut Bağlanıyor...</span>
+                            </div>
+                        </div>
+                        <!-- +10 Font Büyütülmüş Saat ve Tarih Gösterimi -->
+                        <div class="flex flex-wrap items-baseline gap-2.5 mt-0.5">
+                            <span id="live-time-big" class="text-[26px] sm:text-[30px] leading-none font-black tracking-tight text-amber-400 font-mono">--:--</span>
+                            <span id="live-date-big" class="text-[18px] sm:text-[21px] leading-tight font-bold text-stone-200">Yükleniyor...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orta: Ana Sekmeler -->
+            <nav class="flex items-center bg-cafe-950 p-1.5 rounded-2xl border border-cafe-700">
+                <button onclick="switchTab('pos')" id="tab-btn-pos" class="touch-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-extrabold transition-all bg-amber-500 text-cafe-950 shadow">
+                    <i data-lucide="layout-grid" class="w-4 h-4"></i>
+                    <span>POS / Satış Ekranı</span>
+                </button>
+                <button onclick="switchTab('reports')" id="tab-btn-reports" class="touch-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-extrabold transition-all text-stone-300 hover:text-white">
+                    <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+                    <span>Gelir & Analiz Raporları</span>
+                </button>
+                <button onclick="switchTab('products')" id="tab-btn-products" class="touch-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-extrabold transition-all text-stone-300 hover:text-white">
+                    <i data-lucide="package-plus" class="w-4 h-4"></i>
+                    <span>Ürün Yönetimi</span>
+                </button>
+            </nav>
+
+            <!-- Sağ: Gece/Gündüz Tema Butonu & Günlük Hızlı Ciro Özeti -->
+            <div class="flex items-center gap-3">
+                <!-- Gece / Gündüz Tema Değiştirici -->
+                <button onclick="toggleTheme()" id="theme-toggle-btn" class="touch-btn flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-cafe-950 hover:bg-cafe-800 border border-cafe-700 text-xs sm:text-sm font-extrabold text-stone-200 shadow-sm" title="Gece / Gündüz Modunu Değiştir">
+                    <i id="theme-toggle-icon" data-lucide="sun" class="w-5 h-5 text-amber-400"></i>
+                    <span id="theme-toggle-label">Gündüz Modu</span>
+                </button>
+
+                <!-- Günlük Hızlı Ciro Özeti -->
+                <div class="hidden xl:flex items-center gap-4 bg-cafe-950 px-3.5 py-2 rounded-xl border border-cafe-700">
+                    <div class="text-right">
+                        <span class="text-[11px] uppercase tracking-wider text-stone-400 block font-semibold">Bugünkü Ciro</span>
+                        <span id="header-today-revenue" class="text-base font-black text-emerald-400">0,00 ₺</span>
+                    </div>
+                    <div class="h-7 w-px bg-cafe-700"></div>
+                    <div class="text-right">
+                        <span class="text-[11px] uppercase tracking-wider text-stone-400 block font-semibold">Bugün Sipariş</span>
+                        <span id="header-today-orders" class="text-base font-black text-amber-400">0 Adisyon</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- İÇERİK ALANI -->
+        <main class="flex-1 overflow-hidden relative">
+
+            <!-- ==========================================
+                 1. SEKME: POS / SATIŞ EKRANI
+                 ========================================== -->
+            <section id="view-pos" class="h-full w-full flex flex-col lg:flex-row overflow-hidden">
+                
+                <!-- SOL/ORTA: KATEGORİLER VE ÜRÜN IZGARASI -->
+                <div class="flex-1 flex flex-col h-full overflow-hidden bg-cafe-950 pos-textured-bg p-3 sm:p-4">
+                    
+                    <!-- Kategori Sekmeleri ve Arama -->
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-4 shrink-0">
+                        <!-- Kategori Butonları -->
+                        <div id="pos-category-tabs" class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
+                            <!-- JS ile doldurulur -->
+                        </div>
+
+                        <!-- Hızlı Ürün Arama -->
+                        <div class="relative min-w-[220px]">
+                            <i data-lucide="search" class="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                            <input type="text" id="pos-search-input" oninput="renderPosProducts()" placeholder="Ürün ara..." class="w-full bg-cafe-900 border border-cafe-700 focus:border-amber-500 rounded-xl pl-9 pr-8 py-2.5 text-sm font-medium text-white placeholder-stone-500 outline-none">
+                            <button onclick="clearPosSearch()" id="pos-search-clear" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-white">
+                                <i data-lucide="x" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Ürün Izgarası (Grid) - Yiyecek/İçecek Arka Plan Görselli ve Büyük Yazılı Kartlar -->
+                    <div id="pos-product-grid" class="flex-1 overflow-y-auto grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3.5 content-start pr-1 pb-6">
+                        <!-- JS ile ürün kartları buraya basılır -->
+                    </div>
+                </div>
+
+                <!-- SAĞ: AKTİF ADİSYON (SEPET) VE ÖDEME PANELİ -->
+                <div class="w-full lg:w-[400px] xl:w-[430px] bg-cafe-900 border-t lg:border-t-0 lg:border-l border-cafe-700 flex flex-col h-[52vh] lg:h-full shrink-0 shadow-2xl">
+                    
+                    <!-- Adisyon Üst Bilgi: Masa Seçimi & Temizle -->
+                    <div class="p-3.5 border-b border-cafe-700 flex items-center justify-between gap-2 bg-cafe-800/50">
+                        <div class="flex items-center gap-2 flex-1">
+                            <i data-lucide="utensils" class="w-5 h-5 text-amber-400 shrink-0"></i>
+                            <select id="cart-table-select" class="bg-cafe-950 border border-cafe-700 text-white text-sm font-bold rounded-xl px-3 py-2 focus:border-amber-500 outline-none flex-1">
+                                <option value="Gel-Al / Paket">🥡 Gel-Al / Paket Servis</option>
+                                <option value="Banko / Hızlı Satış">⚡ Banko / Hızlı Satış</option>
+                                <option value="Masa 1">🪑 Masa 1</option>
+                                <option value="Masa 2">🪑 Masa 2</option>
+                                <option value="Masa 3">🪑 Masa 3</option>
+                                <option value="Masa 4">🪑 Masa 4</option>
+                                <option value="Masa 5">🪑 Masa 5</option>
+                                <option value="Masa 6">🪑 Masa 6</option>
+                                <option value="Masa 7">🪑 Masa 7</option>
+                                <option value="Masa 8">🪑 Masa 8</option>
+                                <option value="Masa 9">🪑 Masa 9</option>
+                                <option value="Masa 10">🪑 Masa 10</option>
+                                <option value="Bahçe 1">🌿 Bahçe 1</option>
+                                <option value="Bahçe 2">🌿 Bahçe 2</option>
+                                <option value="Bahçe 3">🌿 Bahçe 3</option>
+                                <option value="Bahçe 4">🌿 Bahçe 4</option>
+                            </select>
+                        </div>
+                        <button onclick="clearCart()" class="touch-btn px-3 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-xs font-bold flex items-center gap-1.5" title="Sepeti Boşalt">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            <span>Temizle</span>
+                        </button>
+                    </div>
+
+                    <!-- Sepet Ürün Listesi -->
+                    <div id="cart-items-list" class="flex-1 overflow-y-auto p-3 space-y-2">
+                        <!-- JS ile sepet kalemleri buraya basılır -->
+                    </div>
+
+                    <!-- Sipariş Notu ve Ödeme Bölümü -->
+                    <div class="p-3.5 bg-cafe-950 border-t border-cafe-700 space-y-3">
+                        
+                        <!-- Sipariş Notu -->
+                        <div class="flex items-center gap-2">
+                            <div class="relative flex-1">
+                                <i data-lucide="message-square" class="w-4 h-4 text-stone-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                                <input type="text" id="cart-note-input" placeholder="Sipariş notu (Az şekerli, paket vb.)" class="w-full bg-cafe-900 border border-cafe-700 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-stone-500 focus:border-amber-500 outline-none">
+                            </div>
+                        </div>
+
+                        <!-- Ödeme Yöntemi Seçimi -->
+                        <div class="grid grid-cols-2 gap-2">
+                            <button type="button" onclick="setPaymentMethod('Nakit')" id="pay-btn-cash" class="touch-btn py-2.5 px-3 rounded-xl border-2 border-emerald-500 bg-emerald-500/15 text-emerald-300 font-bold text-sm flex items-center justify-center gap-2">
+                                <i data-lucide="banknote" class="w-4 h-4"></i>
+                                <span>Nakit</span>
+                            </button>
+                            <button type="button" onclick="setPaymentMethod('Kredi Kartı')" id="pay-btn-card" class="touch-btn py-2.5 px-3 rounded-xl border-2 border-cafe-700 bg-cafe-900 text-stone-300 font-bold text-sm flex items-center justify-center gap-2">
+                                <i data-lucide="credit-card" class="w-4 h-4"></i>
+                                <span>Kredi Kartı</span>
+                            </button>
+                        </div>
+
+                        <!-- Toplam Tutar Gösterimi -->
+                        <div class="flex items-center justify-between bg-cafe-900 px-4 py-3 rounded-xl border border-cafe-700">
+                            <div>
+                                <span class="text-xs text-stone-400 block">Toplam (<span id="cart-total-count">0</span> Ürün)</span>
+                                <span id="cart-payment-badge" class="text-[11px] font-bold text-emerald-400">Ödeme: Nakit</span>
+                            </div>
+                            <div id="cart-total-price" class="text-2xl font-black text-amber-400 tracking-tight">
+                                0,00 ₺
+                            </div>
+                        </div>
+
+                        <!-- Aksiyon Butonları: Tek Tıkla Satış & Yazdır -->
+                        <div class="grid grid-cols-12 gap-2">
+                            <button onclick="completeSale(true)" class="touch-btn col-span-8 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-cafe-950 font-extrabold py-3.5 px-4 rounded-xl shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 text-sm sm:text-base">
+                                <i data-lucide="printer" class="w-5 h-5 stroke-[2.5]"></i>
+                                <span>SATIŞI TAMAMLA & YAZDIR</span>
+                            </button>
+                            <button onclick="completeSale(false)" class="touch-btn col-span-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 px-2 rounded-xl flex items-center justify-center gap-1.5 text-xs sm:text-sm" title="Fiş yazdırmadan sadece satışı kaydet">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 shrink-0"></i>
+                                <span>Sadece Kaydet</span>
+                            </button>
+                        </div>
+                        <button onclick="previewAndPrintCurrentCart()" class="touch-btn w-full py-2 rounded-xl bg-cafe-800 hover:bg-cafe-700 text-stone-300 text-xs font-semibold flex items-center justify-center gap-1.5 border border-cafe-700">
+                            <i data-lucide="receipt" class="w-3.5 h-3.5 text-amber-400"></i>
+                            <span>Satışı Kaydetmeden Ön Adisyon / Bilgi Fişi Yazdır</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==========================================
+                 2. SEKME: GELİR & ANALİZ RAPORLARI
+                 ========================================== -->
+            <section id="view-reports" class="hidden h-full w-full overflow-y-auto p-4 sm:p-6 space-y-6 bg-cafe-950">
+                
+                <!-- Üst Kontrol Çubuğu: Zaman Filtreleri ve Veri İşlemleri -->
+                <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 bg-cafe-900 p-4 rounded-2xl border border-cafe-700">
+                    <div>
+                        <h2 class="text-xl font-extrabold text-white flex items-center gap-2">
+                            <i data-lucide="trending-up" class="w-6 h-6 text-amber-400"></i>
+                            <span>Gelir ve Ürün Satış Analizi</span>
+                        </h2>
+                        <p id="report-period-subtitle" class="text-xs text-stone-400 mt-0.5">Seçili dönemdeki tüm ürün bazlı satış adetleri ve ciro dağılımı</p>
+                    </div>
+
+                    <!-- Periyot Seçici Butonlar (Günlük, Haftalık, Aylık, Tümü) -->
+                    <div class="flex flex-wrap items-center gap-2">
+                        <div class="flex bg-cafe-950 p-1 rounded-xl border border-cafe-700">
+                            <button onclick="setReportPeriod('daily')" id="period-btn-daily" class="touch-btn px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-amber-500 text-cafe-950">
+                                Günlük (Bugün)
+                            </button>
+                            <button onclick="setReportPeriod('weekly')" id="period-btn-weekly" class="touch-btn px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold text-stone-300 hover:text-white">
+                                Haftalık (Son 7 Gün)
+                            </button>
+                            <button onclick="setReportPeriod('monthly')" id="period-btn-monthly" class="touch-btn px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold text-stone-300 hover:text-white">
+                                Aylık (Bu Ay)
+                            </button>
+                            <button onclick="setReportPeriod('all')" id="period-btn-all" class="touch-btn px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold text-stone-300 hover:text-white">
+                                Tüm Zamanlar
+                            </button>
+                        </div>
+
+                        <!-- Dışa Aktar ve Test Verisi -->
+                        <button onclick="exportReportCSV()" class="touch-btn px-3.5 py-2.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 text-xs font-bold flex items-center gap-1.5">
+                            <i data-lucide="download" class="w-4 h-4"></i>
+                            <span>Excel / CSV İndir</span>
+                        </button>
+                        <button onclick="seedDemoSalesData()" class="touch-btn px-3.5 py-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 text-xs font-bold flex items-center gap-1.5" title="Raporları test etmek için örnek geçmiş satışlar oluşturur">
+                            <i data-lucide="sparkles" class="w-4 h-4"></i>
+                            <span>Örnek Veri Yükle</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Özet KPI Kartları -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Toplam Ciro -->
+                    <div class="bg-cafe-900 border border-cafe-700 rounded-2xl p-5 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-semibold uppercase tracking-wider text-stone-400">Toplam Ciro (Gelir)</span>
+                            <div id="kpi-total-revenue" class="text-2xl sm:text-3xl font-black text-emerald-400 mt-1">0,00 ₺</div>
+                            <span id="kpi-avg-order" class="text-xs text-stone-400 mt-1 block">Ort. Sepet: 0,00 ₺</span>
+                        </div>
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                            <i data-lucide="wallet" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+
+                    <!-- Toplam Satılan Ürün Adedi -->
+                    <div class="bg-cafe-900 border border-cafe-700 rounded-2xl p-5 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-semibold uppercase tracking-wider text-stone-400">Satılan Ürün Adedi</span>
+                            <div id="kpi-total-items" class="text-2xl sm:text-3xl font-black text-amber-400 mt-1">0 Adet</div>
+                            <span id="kpi-total-orders" class="text-xs text-stone-400 mt-1 block">Toplam 0 Adisyon/Fiş</span>
+                        </div>
+                        <div class="w-12 h-12 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400">
+                            <i data-lucide="cup-soda" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+
+                    <!-- Nakit & Kart Dağılımı -->
+                    <div class="bg-cafe-900 border border-cafe-700 rounded-2xl p-5 flex items-center justify-between">
+                        <div class="w-full pr-3">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-stone-400">Ödeme Dağılımı</span>
+                            <div class="mt-2 space-y-1.5">
+                                <div class="flex justify-between text-xs">
+                                    <span class="text-stone-300 font-medium">💵 Nakit:</span>
+                                    <span id="kpi-cash-total" class="font-bold text-emerald-400">0,00 ₺</span>
+                                </div>
+                                <div class="flex justify-between text-xs">
+                                    <span class="text-stone-300 font-medium">💳 Kredi Kartı:</span>
+                                    <span id="kpi-card-total" class="font-bold text-sky-400">0,00 ₺</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-12 h-12 rounded-2xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 shrink-0">
+                            <i data-lucide="pie-chart" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+
+                    <!-- En Çok Kazandıran Ürün -->
+                    <div class="bg-cafe-900 border border-cafe-700 rounded-2xl p-5 flex items-center justify-between">
+                        <div class="overflow-hidden pr-2">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-stone-400">Lider Ürün</span>
+                            <div id="kpi-top-product-name" class="text-lg font-extrabold text-white mt-1 truncate">-</div>
+                            <span id="kpi-top-product-stats" class="text-xs text-amber-400 font-semibold mt-1 block">0 Adet • 0,00 ₺</span>
+                        </div>
+                        <div class="w-12 h-12 rounded-2xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400 shrink-0">
+                            <i data-lucide="award" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kategori Bazlı Hızlı Dağılım Barları -->
+                <div class="bg-cafe-900 border border-cafe-700 rounded-2xl p-5">
+                    <h3 class="text-sm font-bold text-stone-300 uppercase tracking-wider mb-4 flex items-center gap-2">
+                        <i data-lucide="layers" class="w-4 h-4 text-amber-400"></i>
+                        <span>Kategori Bazlı Gelir Dağılımı</span>
+                    </h3>
+                    <div id="category-breakdown-bars" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <!-- JS ile doldurulur -->
+                    </div>
+                </div>
+
+                <!-- ANA RAPOR: HANGİ ÜRÜN NE KADAR SATMIŞ VE NE KADAR KAZANDIRMIŞ TABLOSU -->
+                <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+                    
+                    <!-- Sol 7 Sütun: Ürün Bazlı Satış ve Gelir Tablosu -->
+                    <div class="xl:col-span-7 bg-cafe-900 border border-cafe-700 rounded-2xl flex flex-col overflow-hidden">
+                        <div class="p-4 border-b border-cafe-700 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div>
+                                <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+                                    <i data-lucide="flame" class="w-5 h-5 text-amber-400"></i>
+                                    <span>Ürün Bazlı Satış ve Kazanç Tablosu</span>
+                                </h3>
+                                <p class="text-xs text-stone-400">Hangi üründen kaç adet satıldığı ve elde edilen toplam gelir</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <select id="report-category-filter" onchange="renderReports()" class="bg-cafe-950 border border-cafe-700 rounded-xl px-3 py-1.5 text-xs font-semibold text-white outline-none focus:border-amber-500">
+                                    <option value="all">Tüm Kategoriler</option>
+                                    <option value="Kahveler">☕ Kahveler</option>
+                                    <option value="İçecekler">🥤 İçecekler</option>
+                                    <option value="Pastalar">🍰 Pastalar</option>
+                                    <option value="Pizzalar">🍕 Pizzalar</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="overflow-x-auto max-h-[460px]">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-cafe-950 text-stone-400 text-xs uppercase sticky top-0 z-10">
+                                    <tr>
+                                        <th class="py-3 px-4 font-bold">Ürün Adı</th>
+                                        <th class="py-3 px-3 font-bold">Kategori</th>
+                                        <th class="py-3 px-3 font-bold text-center">Satılan Adet</th>
+                                        <th class="py-3 px-3 font-bold text-right">Toplam Kazanç</th>
+                                        <th class="py-3 px-4 font-bold text-right">Ciro Payı</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="report-product-tbody" class="divide-y divide-cafe-800 text-sm">
+                                    <!-- JS ile doldurulur -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Sağ 5 Sütun: Son Kesilen Fişler / Adisyon Geçmişi (Tekrar Yazdır & İptal Et) -->
+                    <div class="xl:col-span-5 bg-cafe-900 border border-cafe-700 rounded-2xl flex flex-col overflow-hidden">
+                        <div class="p-4 border-b border-cafe-700 flex items-center justify-between">
+                            <div>
+                                <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+                                    <i data-lucide="history" class="w-5 h-5 text-amber-400"></i>
+                                    <span>Adisyon & Fiş Geçmişi</span>
+                                </h3>
+                                <p class="text-xs text-stone-400">Geçmiş fişleri tek tıkla tekrar yazdırabilir veya silebilirsiniz</p>
+                            </div>
+                            <button onclick="clearAllSalesHistory()" class="text-xs text-red-400 hover:text-red-300 font-semibold flex items-center gap-1 px-2 py-1 rounded-lg hover:bg-red-500/10">
+                                <i data-lucide="trash" class="w-3.5 h-3.5"></i>
+                                <span>Geçmişi Sıfırla</span>
+                            </button>
+                        </div>
+
+                        <div id="report-orders-list" class="p-3 space-y-2.5 overflow-y-auto max-h-[460px]">
+                            <!-- JS ile doldurulur -->
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ==========================================
+                 3. SEKME: ÜRÜN YÖNETİMİ
+                 ========================================== -->
+            <section id="view-products" class="hidden h-full w-full overflow-y-auto p-4 sm:p-6 bg-cafe-950">
+                <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    
+                    <!-- Sol 4 Sütun: Yeni Ürün Ekle / Düzenle Formu -->
+                    <div class="lg:col-span-4 bg-cafe-900 border border-cafe-700 rounded-2xl p-5 h-fit">
+                        <h3 id="product-form-title" class="text-lg font-extrabold text-white flex items-center gap-2 mb-4">
+                            <i data-lucide="plus-circle" class="w-5 h-5 text-amber-400"></i>
+                            <span>Yeni Ürün Ekle</span>
+                        </h3>
+
+                        <form id="product-form" onsubmit="saveProductForm(event)" class="space-y-4">
+                            <input type="hidden" id="prod-id-input">
+
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-stone-400 mb-1.5">Ürün Adı</label>
+                                <input type="text" id="prod-name-input" required placeholder="Örn: Caramel Macchiato" class="w-full bg-cafe-950 border border-cafe-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-amber-500 outline-none">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-stone-400 mb-1.5">Kategori</label>
+                                <select id="prod-category-input" required class="w-full bg-cafe-950 border border-cafe-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-amber-500 outline-none">
+                                    <option value="Kahveler">☕ Kahveler</option>
+                                    <option value="İçecekler">🥤 İçecekler</option>
+                                    <option value="Pastalar">🍰 Pastalar</option>
+                                    <option value="Pizzalar">🍕 Pizzalar</option>
+                                </select>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-stone-400 mb-1.5">Satış Fiyatı (₺)</label>
+                                    <input type="number" id="prod-price-input" required min="1" step="0.5" placeholder="95" class="w-full bg-cafe-950 border border-cafe-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-amber-500 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-stone-400 mb-1.5">Simge / Emoji</label>
+                                    <input type="text" id="prod-emoji-input" placeholder="☕" maxlength="4" class="w-full bg-cafe-950 border border-cafe-700 rounded-xl px-3.5 py-2.5 text-sm text-center text-white focus:border-amber-500 outline-none">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-stone-400 mb-1.5">Arka Plan Görsel URL (Boş bırakılırsa otomatik atanır)</label>
+                                <input type="url" id="prod-image-input" placeholder="https://images.unsplash.com/..." class="w-full bg-cafe-950 border border-cafe-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:border-amber-500 outline-none">
+                            </div>
+
+                            <div class="pt-2 flex gap-2">
+                                <button type="submit" class="touch-btn flex-1 bg-amber-500 hover:bg-amber-400 text-cafe-950 font-extrabold py-2.5 px-4 rounded-xl text-sm flex items-center justify-center gap-2">
+                                    <i data-lucide="save" class="w-4 h-4"></i>
+                                    <span id="prod-submit-text">Ürünü Buluta Kaydet</span>
+                                </button>
+                                <button type="button" onclick="resetProductForm()" id="prod-cancel-btn" class="hidden touch-btn px-4 py-2.5 rounded-xl bg-cafe-800 text-stone-300 hover:text-white text-sm font-bold">
+                                    İptal
+                                </button>
+                            </div>
+                        </form>
+
+                        <div class="mt-6 pt-5 border-t border-cafe-700">
+                            <button onclick="resetDefaultProducts()" class="touch-btn w-full py-2.5 px-3 rounded-xl bg-cafe-800 hover:bg-cafe-700 text-stone-300 text-xs font-semibold flex items-center justify-center gap-2 border border-cafe-700">
+                                <i data-lucide="rotate-ccw" class="w-4 h-4 text-amber-400"></i>
+                                <span>Varsayılan Görselli Kafe Menüsünü Yükle</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Sağ 8 Sütun: Mevcut Ürün Listesi -->
+                    <div class="lg:col-span-8 bg-cafe-900 border border-cafe-700 rounded-2xl flex flex-col overflow-hidden">
+                        <div class="p-4 border-b border-cafe-700 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div>
+                                <h3 class="text-lg font-extrabold text-white">Menüdeki Ürünler (<span id="manage-product-count">0</span>)</h3>
+                                <p class="text-xs text-stone-400">Fiyatları düzenleyebilir veya menüden ürün kaldırabilirsiniz</p>
+                            </div>
+                            <select id="manage-category-filter" onchange="renderProductManagement()" class="bg-cafe-950 border border-cafe-700 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none focus:border-amber-500">
+                                <option value="all">Tüm Kategoriler</option>
+                                <option value="Kahveler">☕ Kahveler</option>
+                                <option value="İçecekler">🥤 İçecekler</option>
+                                <option value="Pastalar">🍰 Pastalar</option>
+                                <option value="Pizzalar">🍕 Pizzalar</option>
+                            </select>
+                        </div>
+
+                        <div class="overflow-x-auto max-h-[600px]">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-cafe-950 text-stone-400 text-xs uppercase sticky top-0">
+                                    <tr>
+                                        <th class="py-3 px-4">Ürün</th>
+                                        <th class="py-3 px-3">Kategori</th>
+                                        <th class="py-3 px-3 text-right">Birim Fiyat</th>
+                                        <th class="py-3 px-4 text-right">İşlem</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="manage-products-tbody" class="divide-y divide-cafe-800 text-sm">
+                                    <!-- JS ile doldurulur -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ==========================================
+         TERMAL POS YAZICI FİŞ ŞABLONU (Sadece @media print'te görünür)
+         ========================================== -->
+    <div id="thermal-receipt-container">
+        <div style="text-align: center;">
+            <div id="receipt-cafe-title" style="font-size: 16px; font-weight: 700; letter-spacing: 0.5px;">ROAST & CRUST KAFE</div>
+            <div id="receipt-cafe-sub" style="font-size: 11px; margin-top: 2px;">Kahve • Pasta • Artisan Pizza</div>
+            <div id="receipt-cafe-phone" style="font-size: 10px; margin-top: 1px;">Bilgi & Adisyon Fişi</div>
+        </div>
+
+        <div class="receipt-dashed"></div>
+
+        <div style="display: flex; justify-content: space-between; font-size: 11px;">
+            <span>TARİH: <strong id="receipt-date">-</strong></span>
+            <span>SAAT: <strong id="receipt-time">-</strong></span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 11px; margin-top: 2px;">
+            <span>MASA/KONUM: <strong id="receipt-table">-</strong></span>
+            <span>FİŞ NO: <strong id="receipt-no">#0000</strong></span>
+        </div>
+
+        <div class="receipt-dashed"></div>
+
+        <!-- Ürün Başlıkları -->
+        <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 11px; margin-bottom: 4px;">
+            <span>ÜRÜN (ADET x FİYAT)</span>
+            <span>TUTAR</span>
+        </div>
+
+        <!-- Ürün Kalemleri -->
+        <div id="receipt-items-body" style="font-size: 12px;">
+            <!-- JS ile doldurulur -->
+        </div>
+
+        <!-- Sipariş Notu Varsa -->
+        <div id="receipt-note-box" style="display: none; margin-top: 6px; font-size: 11px; font-style: italic;">
+            NOT: <span id="receipt-note-text"></span>
+        </div>
+
+        <div class="receipt-double">
+            <div style="display: flex; justify-content: space-between; font-size: 15px; font-weight: 700;">
+                <span>GENEL TOPLAM:</span>
+                <span id="receipt-total">0,00 TL</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 11px; margin-top: 2px;">
+                <span>ÖDEME TİPİ:</span>
+                <strong id="receipt-payment">NAKİT</strong>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 8px; font-size: 11px;">
+            <div id="receipt-footer-msg" style="font-weight: 700;">AFİYET OLSUN, YİNE BEKLERİZ!</div>
+            <div style="font-size: 9px; margin-top: 4px;">Mali Değeri Yoktur • Bilgi Fişidir</div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         MODALLAR VE BİLDİRİMLER (TOAST)
+         ========================================== -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Kafe & Fiş Ayarları Modalı -->
+    <div id="modal-container" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-cafe-900 border border-cafe-700 rounded-2xl max-w-md w-full p-5 shadow-2xl">
+            <div class="flex items-center justify-between pb-3 border-b border-cafe-700">
+                <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+                    <i data-lucide="printer" class="w-5 h-5 text-amber-400"></i>
+                    <span>Kafe & Termal Fiş Ayarları</span>
+                </h3>
+                <button onclick="closeCafeSettingsModal()" class="text-stone-400 hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <form onsubmit="saveCafeSettings(event)" class="space-y-4 mt-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-stone-400 mb-1">Kafe / İşletme Adı</label>
+                    <input type="text" id="setting-cafe-name" required class="w-full bg-cafe-950 border border-cafe-700 rounded-xl px-3.5 py-2 text-sm text-white outline-none focus:border-amber-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-stone-400 mb-1">Fiş Alt Başlığı (Slogan / Adres)</label>
+                    <input type="text" id="setting-cafe-sub" class="w-full bg-cafe-950 border border-cafe-700 rounded-xl px-3.5 py-2 text-sm text-white outline-none focus:border-amber-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-stone-400 mb-1">Fiş Alt Mesajı</label>
+                    <input type="text" id="setting-cafe-footer" class="w-full bg-cafe-950 border border-cafe-700 rounded-xl px-3.5 py-2 text-sm text-white outline-none focus:border-amber-500">
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeCafeSettingsModal()" class="px-4 py-2 rounded-xl bg-cafe-800 text-stone-300 text-xs font-bold">Vazgeç</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-amber-500 text-cafe-950 text-xs font-extrabold">Ayarları Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Onay Modalı (confirm yerine özel modal) -->
+    <div id="confirm-modal" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-cafe-900 border border-cafe-700 rounded-2xl max-w-sm w-full p-5 shadow-2xl text-center">
+            <div class="w-12 h-12 rounded-2xl bg-red-500/15 text-red-400 flex items-center justify-center mx-auto mb-3">
+                <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+            </div>
+            <h4 id="confirm-modal-title" class="text-base font-extrabold text-white">Emin misiniz?</h4>
+            <p id="confirm-modal-desc" class="text-xs text-stone-400 mt-1 mb-5">Bu işlem geri alınamaz.</p>
+            <div class="flex gap-2 justify-center">
+                <button onclick="closeConfirmModal()" class="flex-1 py-2.5 rounded-xl bg-cafe-800 text-stone-300 text-xs font-bold">İptal</button>
+                <button id="confirm-modal-yes-btn" class="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-extrabold">Evet, Onayla</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         JAVASCRIPT & FIREBASE UYGULAMA MANTIĞI
+         ========================================== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, deleteDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyD4P1YR_bzVKfpbGijZFabeWoB0rPIO9jM",
+  authDomain: "kafe-pos-537d5.firebaseapp.com",
+  databaseURL: "https://kafe-pos-537d5-default-rtdb.firebaseio.com",
+  projectId: "kafe-pos-537d5",
+  storageBucket: "kafe-pos-537d5.firebasestorage.app",
+  messagingSenderId: "820157539799",
+  appId: "1:820157539799:web:dc06ad1b6d6a6d0634d792",
+  measurementId: "G-88KH37XXG5"
+};
+
+
+        // --- KATEGORİ VARSAYILAN ARKA PLAN RESİMLERİ ---
+        const CATEGORY_FALLBACK_IMAGES = {
+            'Kahveler': 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=600&q=80',
+            'İçecekler': 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80',
+            'Pastalar': 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80',
+            'Pizzalar': 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80'
+        };
+
+        // --- VARSAYILAN KAFE MENÜSÜ (Yiyecek & İçecek Fotoğraflı) ---
+        const DEFAULT_PRODUCTS = [
+            // Kahveler
+            { id: 'k1', name: 'Espresso', category: 'Kahveler', price: 75, emoji: '☕', image: 'https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&w=600&q=80' },
+            { id: 'k2', name: 'Americano', category: 'Kahveler', price: 90, emoji: '☕', image: 'https://images.unsplash.com/photo-1551030173-122aabc4489c?auto=format&fit=crop&w=600&q=80' },
+            { id: 'k3', name: 'Caffe Latte', category: 'Kahveler', price: 105, emoji: '🥛', image: 'https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?auto=format&fit=crop&w=600&q=80' },
+            { id: 'k4', name: 'Flat White', category: 'Kahveler', price: 115, emoji: '☕', image: 'https://images.unsplash.com/photo-1577968897966-3d4325b36b61?auto=format&fit=crop&w=600&q=80' },
+            { id: 'k5', name: 'Cappuccino', category: 'Kahveler', price: 105, emoji: '☁️', image: 'https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=600&q=80' },
+            { id: 'k6', name: 'Türk Kahvesi', category: 'Kahveler', price: 80, emoji: '🇹🇷', image: 'https://images.unsplash.com/photo-1578374173705-969cbe6f2d6b?auto=format&fit=crop&w=600&q=80' },
+            { id: 'k7', name: 'Cold Brew', category: 'Kahveler', price: 120, emoji: '🧊', image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=600&q=80' },
+            { id: 'k8', name: 'Iced Latte', category: 'Kahveler', price: 115, emoji: '🥤', image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=600&q=80' },
+
+            // İçecekler
+            { id: 'i1', name: 'Sıkma Portakal Suyu', category: 'İçecekler', price: 110, emoji: '🍊', image: 'https://images.unsplash.com/photo-1613478223719-2ab802602423?auto=format&fit=crop&w=600&q=80' },
+            { id: 'i2', name: 'Ev Yapımı Limonata', category: 'İçecekler', price: 95, emoji: '🍋', image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80' },
+            { id: 'i3', name: 'Soğuk Çay (Şeftali)', category: 'İçecekler', price: 85, emoji: '🍑', image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=600&q=80' },
+            { id: 'i4', name: 'Matcha Latte', category: 'İçecekler', price: 130, emoji: '🍵', image: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=600&q=80' },
+            { id: 'i5', name: 'Demleme Çay (Fincan)', category: 'İçecekler', price: 45, emoji: '🫖', image: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=80' },
+            { id: 'i6', name: 'Maden Suyu', category: 'İçecekler', price: 40, emoji: '🫧', image: 'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&w=600&q=80' },
+            { id: 'i7', name: 'Su (Cam Şişe)', category: 'İçecekler', price: 30, emoji: '💧', image: 'https://images.unsplash.com/photo-1564419320461-6870880221ad?auto=format&fit=crop&w=600&q=80' },
+
+            // Pastalar
+            { id: 'pa1', name: 'San Sebastian', category: 'Pastalar', price: 185, emoji: '🧀', image: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=600&q=80' },
+            { id: 'pa2', name: 'İtalyan Tiramisu', category: 'Pastalar', price: 175, emoji: '🍰', image: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&w=600&q=80' },
+            { id: 'pa3', name: 'Çikolatalı Brownie', category: 'Pastalar', price: 160, emoji: '🍫', image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=600&q=80' },
+            { id: 'pa4', name: 'Tereyağlı Kruvasan', category: 'Pastalar', price: 115, emoji: '🥐', image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=80' },
+            { id: 'pa5', name: 'Çilekli Magnolia', category: 'Pastalar', price: 150, emoji: '🍓', image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=600&q=80' },
+            { id: 'pa6', name: 'Havuçlu Tarçınlı Kek', category: 'Pastalar', price: 135, emoji: '🥕', image: 'https://images.unsplash.com/photo-1621303837174-89787a7d4729?auto=format&fit=crop&w=600&q=80' },
+
+            // Pizzalar
+            { id: 'pi1', name: 'Margherita Pizza', category: 'Pizzalar', price: 280, emoji: '🍕', image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=80' },
+            { id: 'pi2', name: 'Pepperoni Pizza', category: 'Pizzalar', price: 330, emoji: '🍕', image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=600&q=80' },
+            { id: 'pi3', name: 'Dört Peynirli Pizza', category: 'Pizzalar', price: 320, emoji: '🧀', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80' },
+            { id: 'pi4', name: 'Mantarlı Sebzeli Pizza', category: 'Pizzalar', price: 295, emoji: '🍄', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=600&q=80' },
+            { id: 'pi5', name: 'BBQ Tavuklu Pizza', category: 'Pizzalar', price: 340, emoji: '🍗', image: 'https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?auto=format&fit=crop&w=600&q=80' }
+        ];
+
+        const CATEGORIES = [
+            { id: 'all', label: 'Tümü', icon: '🌟' },
+            { id: 'Kahveler', label: 'Kahveler', icon: '☕' },
+            { id: 'İçecekler', label: 'İçecekler', icon: '🥤' },
+            { id: 'Pastalar', label: 'Pastalar', icon: '🍰' },
+            { id: 'Pizzalar', label: 'Pizzalar', icon: '🍕' }
+        ];
+
+        // --- UYGULAMA DURUMU (STATE) ---
+        let products = [...DEFAULT_PRODUCTS];
+        let sales = [];
+        let cart = [];
+        let activePosCategory = 'all';
+        let selectedPaymentMethod = 'Nakit';
+        let activeReportPeriod = 'daily';
+        let currentTheme = 'dark';
+        let cafeSettings = {
+            name: 'ROAST & CRUST KAFE',
+            subtitle: 'Kahve • Pasta • Artisan Pizza',
+            footer: 'AFİYET OLSUN, YİNE BEKLERİZ!',
+            theme: 'dark'
+        };
+
+
+        // --- FIREBASE DEĞİŞKENLERİ ---
+        let db = null;
+        let auth = null;
+        let currentUser = null;
+        let isCloudReady = false;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'kafe-pos-default-app';
+
+        // --- PARA BİRİMİ FORMATLAYICI ---
+        function formatTL(amount) {
+            return new Intl.NumberFormat('tr-TR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(amount || 0) + ' ₺';
+        }
+
+        // --- BULUT DURUM GÖSTERGESİ ---
+        function setCloudStatus(status, message) {
+            const badge = document.getElementById('cloud-status-badge');
+            const dot = document.getElementById('cloud-status-dot');
+            const text = document.getElementById('cloud-status-text');
+            if (!badge) return;
+
+            text.textContent = message;
+            if (status === 'connected') {
+                badge.className = 'flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-[11px] font-bold text-emerald-400';
+                dot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+            } else if (status === 'error') {
+                badge.className = 'flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-red-500/15 border border-red-500/30 text-[11px] font-bold text-red-400';
+                dot.className = 'w-2 h-2 rounded-full bg-red-400';
+            } else {
+                badge.className = 'flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-[11px] font-bold text-amber-400';
+                dot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-pulse';
+            }
+        }
+
+        // --- FIREBASE BAŞLATMA VE GERÇEK ZAMANLI DİNLEYİCİLER ---
+        async function initFirebaseSystem() {
+            try {
+                if (typeof __firebase_config === 'undefined' || !__firebase_config) {
+                    setCloudStatus('error', 'Yerel Mod (Config Yok)');
+                    return;
+                }
+
+                const firebaseConfig = JSON.parse(__firebase_config);
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                // KURAL 3: Önce kimlik doğrulaması
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                onAuthStateChanged(auth, (user) => {
+                    currentUser = user;
+                    if (user) {
+                        isCloudReady = true;
+                        setCloudStatus('connected', 'Firebase Bulut Aktif');
+                        startFirestoreListeners();
+                    }
+                });
+            } catch (err) {
+                console.error('Firebase başlatma hatası:', err);
+                setCloudStatus('error', 'Bulut Bağlantı Hatası');
+            }
+        }
+
+        function startFirestoreListeners() {
+            if (! currentUser || !db) return;
+
+            // 1. Ürünler Koleksiyonu Dinleyicisi
+            const productsCol = collection(db, 'artifacts', appId, 'public', 'data', 'products');
+            onSnapshot(productsCol, async (snapshot) => {
+                if (snapshot.empty) {
+                    // İlk kullanımda varsayılan menüyü Firebase'e yükle
+                    for (const prod of DEFAULT_PRODUCTS) {
+                        await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', prod.id), prod);
+                    }
+                } else {
+                    const loaded = [];
+                    snapshot.forEach(docSnap => {
+                        const data = docSnap.data();
+                        if (!data.image) {
+                            data.image = CATEGORY_FALLBACK_IMAGES[data.category] || CATEGORY_FALLBACK_IMAGES['Kahveler'];
+                        }
+                        loaded.push(data);
+                    });
+                    // Kategori ve isme göre düzenli sırala
+                    products = loaded.sort((a, b) => a.name.localeCompare(b.name, 'tr'));
+                    renderPosCategories();
+                    renderPosProducts();
+                    renderProductManagement();
+                }
+            }, (error) => {
+                console.error('Ürün dinleme hatası:', error);
+            });
+
+            // 2. Satışlar (Adisyonlar) Koleksiyonu Dinleyicisi
+            const salesCol = collection(db, 'artifacts', appId, 'public', 'data', 'sales');
+            onSnapshot(salesCol, (snapshot) => {
+                const loadedSales = [];
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    // items JSON string olarak saklanmışsa parse et
+                    const parsedItems = typeof data.itemsJson === 'string' ? JSON.parse(data.itemsJson) : (data.items || []);
+                    loadedSales.push({
+                        ...data,
+                        items: parsedItems
+                    });
+                });
+                // Bellekte tarihe göre yeniden eskiye sırala
+                sales = loadedSales.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                updateHeaderStats();
+                if (!document.getElementById('view-reports').classList.contains('hidden')) {
+                    renderReports();
+                }
+            }, (error) => {
+                console.error('Satış dinleme hatası:', error);
+            });
+
+            // 3. Kafe & Tema Ayarları Dinleyicisi
+            const settingsDoc = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'cafe_config');
+            onSnapshot(settingsDoc, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    cafeSettings = { ...cafeSettings, ...data };
+                    applyCafeSettingsToUI();
+                    if (data.theme && data.theme !== currentTheme) {
+                        applyTheme(data.theme, false);
+                    }
+                }
+            }, (error) => {
+                console.error('Ayarlar dinleme hatası:', error);
+            });
+        }
+
+        // --- GECE / GÜNDÜZ TEMA DEĞİŞTİRİCİ ---
+        function applyTheme(theme, saveToCloud = true) {
+            currentTheme = theme;
+            const htmlEl = document.documentElement;
+            const labelEl = document.getElementById('theme-toggle-label');
+            const iconEl = document.getElementById('theme-toggle-icon');
+
+            if (theme === 'light') {
+                htmlEl.classList.remove('dark');
+                if (labelEl) labelEl.textContent = 'Gece Moduna Geç';
+                if (iconEl) iconEl.setAttribute('data-lucide', 'moon');
+            } else {
+                htmlEl.classList.add('dark');
+                if (labelEl) labelEl.textContent = 'Gündüz Moduna Geç';
+                if (iconEl) iconEl.setAttribute('data-lucide', 'sun');
+            }
+            lucide.createIcons();
+
+            if (saveToCloud && isCloudReady && currentUser) {
+                cafeSettings.theme = theme;
+                setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'cafe_config'), cafeSettings, { merge: true }).catch(console.error);
+            }
+        }
+
+        function toggleTheme() {
+            const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            applyTheme(nextTheme, true);
+            showToast(nextTheme === 'light' ? '☀️ Gündüz teması aktif edildi' : '🌙 Gece teması aktif edildi', 'info');
+        }
+
+        // --- CANLI BÜYÜK SAAT VE TARİH (+10pt Büyütülmüş) ---
+        function initClock() {
+            const update = () => {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('tr-TR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+                const timeStr = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                
+                const timeEl = document.getElementById('live-time-big');
+                const dateEl = document.getElementById('live-date-big');
+                if (timeEl) timeEl.textContent = timeStr;
+                if (dateEl) dateEl.textContent = dateStr;
+            };
+            update();
+            setInterval(update, 1000);
+        }
+
+        // --- SEKME GEÇİŞLERİ ---
+        function switchTab(tab) {
+            const views = ['pos', 'reports', 'products'];
+            views.forEach(v => {
+                const section = document.getElementById(`view-${v}`);
+                const btn = document.getElementById(`tab-btn-${v}`);
+                if (v === tab) {
+                    section.classList.remove('hidden');
+                    btn.className = 'touch-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-extrabold transition-all bg-amber-500 text-cafe-950 shadow';
+                } else {
+                    section.classList.add('hidden');
+                    btn.className = 'touch-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-extrabold transition-all text-stone-300 hover:text-white';
+                }
+            });
+
+            if (tab === 'reports') renderReports();
+            if (tab === 'products') renderProductManagement();
+            lucide.createIcons();
+        }
+
+        // --- POS KATEGORİ SEKMELERİ ---
+        function renderPosCategories() {
+            const container = document.getElementById('pos-category-tabs');
+            if (!container) return;
+            container.innerHTML = CATEGORIES.map(cat => {
+                const active = activePosCategory === cat.id;
+                const count = cat.id === 'all' ? products.length : products.filter(p => p.category === cat.id).length;
+                return `
+                    <button onclick="selectPosCategory('${cat.id}')" class="touch-btn shrink-0 px-4 py-2.5 rounded-xl font-extrabold text-sm sm:text-base flex items-center gap-2 border transition-all ${
+                        active 
+                        ? 'bg-amber-500 text-cafe-950 border-amber-400 shadow-lg shadow-amber-500/20' 
+                        : 'bg-cafe-900 text-stone-300 border-cafe-700 hover:border-cafe-600 hover:text-white'
+                    }">
+                        <span class="text-lg">${cat.icon}</span>
+                        <span>${cat.label}</span>
+                        <span class="text-xs px-2 py-0.5 rounded-md ${active ? 'bg-cafe-950/20 text-cafe-950 font-black' : 'bg-cafe-800 text-stone-400'}">${count}</span>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function selectPosCategory(catId) {
+            activePosCategory = catId;
+            renderPosCategories();
+            renderPosProducts();
+        }
+
+        function clearPosSearch() {
+            document.getElementById('pos-search-input').value = '';
+            renderPosProducts();
+        }
+
+        // --- POS ÜRÜN IZGARASI (Arka Plan Yiyecek/İçecek Fotoğraflı ve Büyük Yazılı) ---
+        function renderPosProducts() {
+            const grid = document.getElementById('pos-product-grid');
+            if (!grid) return;
+            const query = (document.getElementById('pos-search-input')?.value || '').trim().toLowerCase();
+            const clearBtn = document.getElementById('pos-search-clear');
+            
+            if (clearBtn) {
+                clearBtn.classList.toggle('hidden', query.length === 0);
+            }
+
+            const filtered = products.filter(p => {
+                const matchesCat = activePosCategory === 'all' || p.category === activePosCategory;
+                const matchesQuery = !query || p.name.toLowerCase().includes(query) || p.category.toLowerCase().includes(query);
+                return matchesCat && matchesQuery;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-16 text-center text-stone-500">
+                        <p class="text-lg font-bold">Bu filtreye uygun ürün bulunamadı.</p>
+                        <p class="text-sm mt-1">"Ürün Yönetimi" sekmesinden yeni ürün ekleyebilirsiniz.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(prod => {
+                const inCartItem = cart.find(c => c.productId === prod.id);
+                const bgImage = prod.image || CATEGORY_FALLBACK_IMAGES[prod.category] || CATEGORY_FALLBACK_IMAGES['Kahveler'];
+
+                const qtyBadge = inCartItem ? `
+                    <div class="keep-white absolute top-3 right-3 z-20 w-9 h-9 rounded-full bg-amber-500 text-cafe-950 font-black text-base flex items-center justify-center shadow-lg ring-2 ring-white">
+                        ${inCartItem.qty}
+                    </div>
+                ` : '';
+
+                return `
+                    <button onclick="addToCart('${prod.id}')" class="touch-btn relative group text-center rounded-2xl overflow-hidden h-48 sm:h-52 flex flex-col items-center justify-between p-4 shadow-md hover:shadow-2xl border-2 transition-all ${inCartItem ? 'border-amber-400 ring-2 ring-amber-400/50' : 'border-cafe-700/80 hover:border-amber-500/70'}">
+                        <!-- Arka Plan Yiyecek / İçecek Görseli -->
+                        <img src="${bgImage}" alt="${prod.name}" loading="lazy" onerror="this.src='https://placehold.co/600x400/221f1c/f59e0b?text=${encodeURIComponent(prod.name)}'" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        
+                        <!-- Okunabilirlik İçin Koyu Karartma Gradyanı -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/65 to-black/30 group-hover:via-black/55 transition-all"></div>
+
+                        ${qtyBadge}
+
+                        <!-- Üst Satır: Ortalanmış Emoji & Kategori Rozeti -->
+                        <div class="relative z-10 flex items-center justify-center w-full">
+                            <span class="keep-white text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-lg bg-black/65 backdrop-blur-md text-amber-300 border border-white/15">
+                                ${prod.emoji || '☕'} ${prod.category}
+                            </span>
+                        </div>
+
+                        <!-- Orta ve Alt Satır: Ortalanmış Büyük Ürün İsmi ve Fiyat -->
+                        <div class="relative z-10 my-auto flex flex-col items-center justify-center w-full px-1">
+                            <h4 class="keep-white text-center font-black text-lg sm:text-xl leading-snug text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)] line-clamp-2 group-hover:text-amber-300 transition-colors">
+                                ${prod.name}
+                            </h4>
+                        </div>
+
+                        <div class="relative z-10 flex items-center justify-center w-full">
+                            <span class="keep-amber text-center text-xl sm:text-2xl font-black text-amber-400 bg-black/55 backdrop-blur-sm px-3.5 py-1 rounded-xl border border-amber-500/30 drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)] group-hover:bg-amber-500 group-hover:text-cafe-950 transition-colors">
+                                ${formatTL(prod.price)}
+                            </span>
+                        </div>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        // --- SEPET (ADİSYON) İŞLEMLERİ ---
+        function addToCart(productId) {
+            const prod = products.find(p => p.id === productId);
+            if (!prod) return;
+
+            const existing = cart.find(item => item.productId === productId);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({
+                    productId: prod.id,
+                    name: prod.name,
+                    category: prod.category,
+                    price: Number(prod.price),
+                    emoji: prod.emoji || '☕',
+                    qty: 1
+                });
+            }
+            renderCart();
+            renderPosProducts();
+        }
+
+        function changeCartQty(productId, delta) {
+            const idx = cart.findIndex(item => item.productId === productId);
+            if (idx === -1) return;
+
+            cart[idx].qty += delta;
+            if (cart[idx].qty <= 0) {
+                cart.splice(idx, 1);
+            }
+            renderCart();
+            renderPosProducts();
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.productId !== productId);
+            renderCart();
+            renderPosProducts();
+        }
+
+        function clearCart() {
+            if (cart.length === 0) return;
+            cart = [];
+            document.getElementById('cart-note-input').value = '';
+            renderCart();
+            renderPosProducts();
+            showToast('Adisyon temizlendi', 'info');
+        }
+
+        function setPaymentMethod(method) {
+            selectedPaymentMethod = method;
+            const cashBtn = document.getElementById('pay-btn-cash');
+            const cardBtn = document.getElementById('pay-btn-card');
+            const badge = document.getElementById('cart-payment-badge');
+
+            if (method === 'Nakit') {
+                cashBtn.className = 'touch-btn py-2.5 px-3 rounded-xl border-2 border-emerald-500 bg-emerald-500/15 text-emerald-300 font-bold text-sm flex items-center justify-center gap-2';
+                cardBtn.className = 'touch-btn py-2.5 px-3 rounded-xl border-2 border-cafe-700 bg-cafe-900 text-stone-300 font-bold text-sm flex items-center justify-center gap-2';
+                badge.textContent = 'Ödeme: Nakit';
+                badge.className = 'text-[11px] font-bold text-emerald-400';
+            } else {
+                cardBtn.className = 'touch-btn py-2.5 px-3 rounded-xl border-2 border-sky-500 bg-sky-500/15 text-sky-300 font-bold text-sm flex items-center justify-center gap-2';
+                cashBtn.className = 'touch-btn py-2.5 px-3 rounded-xl border-2 border-cafe-700 bg-cafe-900 text-stone-300 font-bold text-sm flex items-center justify-center gap-2';
+                badge.textContent = 'Ödeme: Kredi Kartı';
+                badge.className = 'text-[11px] font-bold text-sky-400';
+            }
+        }
+
+        function renderCart() {
+            const listEl = document.getElementById('cart-items-list');
+            const totalCountEl = document.getElementById('cart-total-count');
+            const totalPriceEl = document.getElementById('cart-total-price');
+
+            const totalQty = cart.reduce((acc, item) => acc + item.qty, 0);
+            const totalPrice = cart.reduce((acc, item) => acc + (item.qty * item.price), 0);
+
+            totalCountEl.textContent = totalQty;
+            totalPriceEl.textContent = formatTL(totalPrice);
+
+            if (cart.length === 0) {
+                listEl.innerHTML = `
+                    <div class="h-full flex flex-col items-center justify-center text-center py-10 text-stone-500">
+                        <div class="w-14 h-14 rounded-2xl bg-cafe-950 border border-cafe-800 flex items-center justify-center mb-3 text-2xl">
+                            ☕
+                        </div>
+                        <p class="text-sm font-bold text-stone-400">Adisyon Boş</p>
+                        <p class="text-xs mt-0.5 max-w-[220px]">Satış yapmak için sol taraftaki ürünlere tıklayın.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            listEl.innerHTML = cart.map(item => `
+                <div class="bg-cafe-950 border border-cafe-700 rounded-xl p-2.5 flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2.5 min-w-0 flex-1">
+                        <span class="text-xl shrink-0">${item.emoji}</span>
+                        <div class="min-w-0 flex-1">
+                            <h5 class="text-sm font-extrabold text-white truncate">${item.name}</h5>
+                            <span class="text-xs font-semibold text-stone-400">${formatTL(item.price)} x ${item.qty}</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <button onclick="changeCartQty('${item.productId}', -1)" class="touch-btn w-7 h-7 rounded-lg bg-cafe-800 hover:bg-cafe-700 text-white font-bold flex items-center justify-center text-sm">-</button>
+                        <span class="w-6 text-center text-sm font-black text-amber-400">${item.qty}</span>
+                        <button onclick="changeCartQty('${item.productId}', 1)" class="touch-btn w-7 h-7 rounded-lg bg-cafe-800 hover:bg-cafe-700 text-white font-bold flex items-center justify-center text-sm">+</button>
+                    </div>
+
+                    <div class="text-right min-w-[76px] shrink-0">
+                        <div class="text-sm font-black text-amber-400">${formatTL(item.price * item.qty)}</div>
+                        <button onclick="removeFromCart('${item.productId}')" class="text-[11px] font-bold text-red-400 hover:underline">Sil</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- SATIŞ TAMAMLAMA VE FIREBASE KAYDI + TEK TIKLA YAZICI ÇIKTISI ---
+        async function completeSale(shouldPrint = true) {
+            if (cart.length === 0) {
+                showToast('Lütfen önce sepete ürün ekleyin!', 'error');
+                return;
+            }
+
+            const now = new Date();
+            const table = document.getElementById('cart-table-select').value;
+            const note = document.getElementById('cart-note-input').value.trim();
+            const total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+            const receiptNo = '#' + String(Math.floor(1000 + Math.random() * 9000));
+            const saleId = 'sale_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
+            const itemsCopy = cart.map(i => ({ ...i }));
+
+            const saleRecord = {
+                id: saleId,
+                receiptNo,
+                timestamp: now.toISOString(),
+                table,
+                note,
+                paymentMethod: selectedPaymentMethod,
+                total,
+                items: itemsCopy
+            };
+
+            if (shouldPrint) {
+                populateThermalReceipt(saleRecord);
+                window.print();
+            }
+
+            // Sepeti hemen temizle
+            cart = [];
+            document.getElementById('cart-note-input').value = '';
+            renderCart();
+            renderPosProducts();
+
+            // Firebase Firestore'a kaydet
+            if (isCloudReady && currentUser) {
+                try {
+                    await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'sales', saleId), {
+                        id: saleId,
+                        receiptNo,
+                        timestamp: saleRecord.timestamp,
+                        table,
+                        note,
+                        paymentMethod: selectedPaymentMethod,
+                        total,
+                        itemsJson: JSON.stringify(itemsCopy)
+                    });
+                    showToast(`Satış buluta kaydedildi (${formatTL(total)})`, 'success');
+                } catch (e) {
+                    console.error('Satış bulut kayıt hatası:', e);
+                    showToast('Bulut kayıt hatası oluştu!', 'error');
+                }
+            } else {
+                sales.unshift(saleRecord);
+                updateHeaderStats();
+                showToast(`Satış kaydedildi (${formatTL(total)})`, 'success');
+            }
+        }
+
+        function previewAndPrintCurrentCart() {
+            if (cart.length === 0) {
+                showToast('Yazdırmak için sepette ürün olmalı!', 'error');
+                return;
+            }
+            const now = new Date();
+            const tempSale = {
+                receiptNo: '#ÖN-FİŞ',
+                timestamp: now.toISOString(),
+                table: document.getElementById('cart-table-select').value,
+                note: document.getElementById('cart-note-input').value.trim(),
+                paymentMethod: selectedPaymentMethod + ' (Ön Fiş)',
+                total: cart.reduce((sum, i) => sum + (i.price * i.qty), 0),
+                items: cart
+            };
+            populateThermalReceipt(tempSale);
+            window.print();
+        }
+
+        function reprintSale(saleId) {
+            const sale = sales.find(s => s.id === saleId);
+            if (!sale) return;
+            populateThermalReceipt(sale);
+            window.print();
+        }
+
+        function populateThermalReceipt(sale) {
+            const d = new Date(sale.timestamp);
+            const dateStr = d.toLocaleDateString('tr-TR');
+            const timeStr = d.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+
+            document.getElementById('receipt-cafe-title').textContent = cafeSettings.name;
+            document.getElementById('receipt-cafe-sub').textContent = cafeSettings.subtitle;
+            document.getElementById('receipt-footer-msg').textContent = cafeSettings.footer;
+
+            document.getElementById('receipt-date').textContent = dateStr;
+            document.getElementById('receipt-time').textContent = timeStr;
+            document.getElementById('receipt-table').textContent = sale.table;
+            document.getElementById('receipt-no').textContent = sale.receiptNo || '#0001';
+
+            const itemsContainer = document.getElementById('receipt-items-body');
+            itemsContainer.innerHTML = sale.items.map(item => `
+                <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                    <span style="padding-right: 6px;">${item.qty}x ${item.name}</span>
+                    <span style="white-space: nowrap; font-weight: 700;">${formatTL(item.qty * item.price)}</span>
+                </div>
+            `).join('');
+
+            const noteBox = document.getElementById('receipt-note-box');
+            if (sale.note) {
+                noteBox.style.display = 'block';
+                document.getElementById('receipt-note-text').textContent = sale.note;
+            } else {
+                noteBox.style.display = 'none';
+            }
+
+            document.getElementById('receipt-total').textContent = formatTL(sale.total);
+            document.getElementById('receipt-payment').textContent = (sale.paymentMethod || 'Nakit').toUpperCase();
+        }
+
+        // --- ÜST BAR GÜNLÜK ÖZET ---
+        function updateHeaderStats() {
+            const now = new Date();
+            const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+
+            const todaySales = sales.filter(s => new Date(s.timestamp).getTime() >= startOfToday);
+            const todayRev = todaySales.reduce((sum, s) => sum + s.total, 0);
+
+            document.getElementById('header-today-revenue').textContent = formatTL(todayRev);
+            document.getElementById('header-today-orders').textContent = `${todaySales.length} Adisyon`;
+        }
+
+        // ==========================================
+        // GELİR & ANALİZ RAPORLARI MANTIĞI
+        // ==========================================
+        function setReportPeriod(period) {
+            activeReportPeriod = period;
+            const periods = ['daily', 'weekly', 'monthly', 'all'];
+            periods.forEach(p => {
+                const btn = document.getElementById(`period-btn-${p}`);
+                if (p === period) {
+                    btn.className = 'touch-btn px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-amber-500 text-cafe-950';
+                } else {
+                    btn.className = 'touch-btn px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold text-stone-300 hover:text-white';
+                }
+            });
+            renderReports();
+        }
+
+        function getFilteredSalesByPeriod() {
+            const now = new Date();
+            const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+            const sevenDaysAgo = startOfToday - (6 * 24 * 60 * 60 * 1000);
+            const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+
+            return sales.filter(s => {
+                const t = new Date(s.timestamp).getTime();
+                if (activeReportPeriod === 'daily') return t >= startOfToday;
+                if (activeReportPeriod === 'weekly') return t >= sevenDaysAgo;
+                if (activeReportPeriod === 'monthly') return t >= startOfMonth;
+                return true;
+            });
+        }
+
+        function renderReports() {
+            const filteredSales = getFilteredSalesByPeriod();
+            const categoryFilter = document.getElementById('report-category-filter')?.value || 'all';
+
+            const totalRevenue = filteredSales.reduce((sum, s) => sum + s.total, 0);
+            const totalOrders = filteredSales.length;
+            const avgOrder = totalOrders > 0 ? totalRevenue / totalOrders : 0;
+
+            let totalItemsSold = 0;
+            let cashTotal = 0;
+            let cardTotal = 0;
+
+            const productStatsMap = {};
+            const categoryStatsMap = {
+                'Kahveler': { qty: 0, rev: 0, icon: '☕' },
+                'İçecekler': { qty: 0, rev: 0, icon: '🥤' },
+                'Pastalar': { qty: 0, rev: 0, icon: '🍰' },
+                'Pizzalar': { qty: 0, rev: 0, icon: '🍕' }
+            };
+
+            filteredSales.forEach(sale => {
+                if (sale.paymentMethod === 'Nakit') cashTotal += sale.total;
+                else cardTotal += sale.total;
+
+                (sale.items || []).forEach(item => {
+                    totalItemsSold += item.qty;
+                    const itemRev = item.qty * item.price;
+
+                    if (categoryStatsMap[item.category]) {
+                        categoryStatsMap[item.category].qty += item.qty;
+                        categoryStatsMap[item.category].rev += itemRev;
+                    }
+
+                    const key = item.name;
+                    if (!productStatsMap[key]) {
+                        productStatsMap[key] = {
+                            name: item.name,
+                            category: item.category,
+                            emoji: item.emoji || '☕',
+                            unitPrice: item.price,
+                            qty: 0,
+                            revenue: 0
+                        };
+                    }
+                    productStatsMap[key].qty += item.qty;
+                    productStatsMap[key].revenue += itemRev;
+                });
+            });
+
+            document.getElementById('kpi-total-revenue').textContent = formatTL(totalRevenue);
+            document.getElementById('kpi-avg-order').textContent = `Ort. Adisyon: ${formatTL(avgOrder)}`;
+            document.getElementById('kpi-total-items').textContent = `${totalItemsSold} Adet`;
+            document.getElementById('kpi-total-orders').textContent = `Toplam ${totalOrders} Adisyon/Fiş`;
+            document.getElementById('kpi-cash-total').textContent = formatTL(cashTotal);
+            document.getElementById('kpi-card-total').textContent = formatTL(cardTotal);
+
+            const allProductsArray = Object.values(productStatsMap).sort((a, b) => b.revenue - a.revenue);
+            if (allProductsArray.length > 0) {
+                const top = allProductsArray[0];
+                document.getElementById('kpi-top-product-name').textContent = `${top.emoji} ${top.name}`;
+                document.getElementById('kpi-top-product-stats').textContent = `${top.qty} Adet • ${formatTL(top.revenue)}`;
+            } else {
+                document.getElementById('kpi-top-product-name').textContent = '-';
+                document.getElementById('kpi-top-product-stats').textContent = '0 Adet • 0,00 ₺';
+            }
+
+            const catContainer = document.getElementById('category-breakdown-bars');
+            catContainer.innerHTML = Object.entries(categoryStatsMap).map(([catName, stat]) => {
+                const pct = totalRevenue > 0 ? Math.round((stat.rev / totalRevenue) * 100) : 0;
+                return `
+                    <div class="bg-cafe-950 border border-cafe-800 rounded-xl p-3.5">
+                        <div class="flex items-center justify-between text-xs font-bold mb-1">
+                            <span class="text-white">${stat.icon} ${catName}</span>
+                            <span class="text-amber-400">${formatTL(stat.rev)}</span>
+                        </div>
+                        <div class="flex items-center justify-between text-[11px] text-stone-400 mb-2">
+                            <span>${stat.qty} Adet Satıldı</span>
+                            <span>%${pct} Pay</span>
+                        </div>
+                        <div class="w-full h-2 rounded-full bg-cafe-800 overflow-hidden">
+                            <div class="h-full bg-amber-500 rounded-full transition-all" style="width: ${pct}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            const tbody = document.getElementById('report-product-tbody');
+            const filteredProductRows = allProductsArray.filter(p => categoryFilter === 'all' || p.category === categoryFilter);
+
+            if (filteredProductRows.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="py-12 text-center text-stone-500 text-xs">
+                            Seçilen zaman aralığında henüz satış kaydı bulunmuyor.
+                        </td>
+                    </tr>
+                `;
+            } else {
+                tbody.innerHTML = filteredProductRows.map((p, idx) => {
+                    const share = totalRevenue > 0 ? ((p.revenue / totalRevenue) * 100).toFixed(1) : '0.0';
+                    return `
+                        <tr class="hover:bg-cafe-800/50 transition-colors">
+                            <td class="py-3 px-4 font-bold text-white flex items-center gap-2">
+                                <span class="text-xs text-stone-500 w-4">${idx + 1}.</span>
+                                <span>${p.emoji}</span>
+                                <span>${p.name}</span>
+                            </td>
+                            <td class="py-3 px-3 text-xs text-stone-300">${p.category}</td>
+                            <td class="py-3 px-3 text-center">
+                                <span class="px-2.5 py-1 rounded-lg bg-amber-500/15 text-amber-300 font-extrabold text-xs">${p.qty} Adet</span>
+                            </td>
+                            <td class="py-3 px-3 text-right font-extrabold text-emerald-400">${formatTL(p.revenue)}</td>
+                            <td class="py-3 px-4 text-right text-xs text-stone-400 font-semibold">%${share}</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            const ordersListEl = document.getElementById('report-orders-list');
+            if (filteredSales.length === 0) {
+                ordersListEl.innerHTML = `
+                    <div class="py-12 text-center text-stone-500 text-xs">
+                        Bu dönemde kesilmiş fiş bulunmuyor.
+                    </div>
+                `;
+            } else {
+                ordersListEl.innerHTML = filteredSales.map(sale => {
+                    const d = new Date(sale.timestamp);
+                    const dateTimeStr = d.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit' }) + ' ' + d.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+                    const itemsSummary = (sale.items || []).map(i => `${i.qty}x ${i.name}`).join(', ');
+
+                    return `
+                        <div class="bg-cafe-950 border border-cafe-800 rounded-xl p-3 flex flex-col gap-2">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-extrabold text-amber-400">${sale.receiptNo || '#FİŞ'}</span>
+                                    <span class="text-xs font-bold text-white bg-cafe-800 px-2 py-0.5 rounded-md">${sale.table}</span>
+                                    <span class="text-[11px] text-stone-400">${dateTimeStr}</span>
+                                </div>
+                                <span class="text-sm font-black text-emerald-400">${formatTL(sale.total)}</span>
+                            </div>
+                            <p class="text-xs text-stone-300 line-clamp-2">${itemsSummary}</p>
+                            <div class="flex items-center justify-between pt-1 border-t border-cafe-800/80">
+                                <span class="text-[11px] font-semibold ${sale.paymentMethod === 'Nakit' ? 'text-emerald-400' : 'text-sky-400'}">
+                                    ${sale.paymentMethod === 'Nakit' ? '💵 Nakit' : '💳 Kredi Kartı'}
+                                </span>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="reprintSale('${sale.id}')" class="touch-btn px-2.5 py-1 rounded-lg bg-cafe-800 hover:bg-amber-500 hover:text-cafe-950 text-stone-200 text-xs font-bold flex items-center gap-1">
+                                        <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+                                        <span>Fiş Yazdır</span>
+                                    </button>
+                                    <button onclick="deleteSaleRecord('${sale.id}')" class="touch-btn px-2 py-1 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-bold">
+                                        İptal/Sil
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                lucide.createIcons();
+            }
+        }
+
+        function deleteSaleRecord(saleId) {
+            openConfirmModal(
+                'Satış Kaydını Sil',
+                'Bu adisyonu Firebase bulut veritabanından silmek istediğinize emin misiniz?',
+                async () => {
+                    if (isCloudReady && currentUser) {
+                        await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'sales', saleId));
+                    } else {
+                        sales = sales.filter(s => s.id !== saleId);
+                        renderReports();
+                    }
+                    showToast('Satış kaydı silindi', 'info');
+                }
+            );
+        }
+
+        function clearAllSalesHistory() {
+            if (sales.length === 0) return;
+            openConfirmModal(
+                'Tüm Satış Geçmişini Sıfırla',
+                'Buluttaki tüm günlük, haftalık ve aylık satış kayıtları silinecek. Emin misiniz?',
+                async () => {
+                    if (isCloudReady && currentUser) {
+                        for (const s of sales) {
+                            await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'sales', s.id));
+                        }
+                    } else {
+                        sales = [];
+                        renderReports();
+                    }
+                    showToast('Tüm satış geçmişi sıfırlandı', 'info');
+                }
+            );
+        }
+
+        // --- ÖRNEK TEST VERİSİ OLUŞTURMA (FIREBASE'E KAYDEDER) ---
+        async function seedDemoSalesData() {
+            const now = new Date();
+            const tables = ['Masa 1', 'Masa 3', 'Masa 5', 'Bahçe 2', 'Gel-Al / Paket', 'Banko / Hızlı Satış'];
+            const methods = ['Nakit', 'Kredi Kartı'];
+
+            showToast('Örnek satış verileri buluta yükleniyor...', 'info');
+
+            for (let i = 0; i < 20; i++) {
+                let daysBack = 0;
+                if (i >= 5 && i < 12) daysBack = Math.floor(1 + Math.random() * 6);
+                else if (i >= 12) daysBack = Math.floor(7 + Math.random() * 18);
+
+                const saleDate = new Date(now.getTime() - (daysBack * 24 * 60 * 60 * 1000) - (Math.random() * 5 * 3600 * 1000));
+                const itemCount = Math.floor(1 + Math.random() * 3);
+                const chosenItems = [];
+
+                for (let j = 0; j < itemCount; j++) {
+                    const randProd = products[Math.floor(Math.random() * products.length)];
+                    const existing = chosenItems.find(c => c.productId === randProd.id);
+                    const qty = Math.floor(1 + Math.random() * 2);
+                    if (existing) {
+                        existing.qty += qty;
+                    } else {
+                        chosenItems.push({
+                            productId: randProd.id,
+                            name: randProd.name,
+                            category: randProd.category,
+                            price: randProd.price,
+                            emoji: randProd.emoji,
+                            qty
+                        });
+                    }
+                }
+
+                const total = chosenItems.reduce((s, it) => s + (it.price * it.qty), 0);
+                const saleId = 'demo_' + Date.now() + '_' + i;
+                const record = {
+                    id: saleId,
+                    receiptNo: '#' + (1050 + i),
+                    timestamp: saleDate.toISOString(),
+                    table: tables[Math.floor(Math.random() * tables.length)],
+                    note: '',
+                    paymentMethod: methods[Math.floor(Math.random() * methods.length)],
+                    total,
+                    itemsJson: JSON.stringify(chosenItems)
+                };
+
+                if (isCloudReady && currentUser) {
+                    await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'sales', saleId), record);
+                } else {
+                    sales.push({ ...record, items: chosenItems });
+                }
+            }
+
+            if (!isCloudReady) renderReports();
+            showToast('Örnek satışlar Firebase buluta eklendi!', 'success');
+        }
+
+        // --- EXCEL / CSV DIŞA AKTARMA ---
+        function exportReportCSV() {
+            const filteredSales = getFilteredSalesByPeriod();
+            if (filteredSales.length === 0) {
+                showToast('Dışa aktarılacak satış verisi yok!', 'error');
+                return;
+            }
+
+            const prodMap = {};
+            filteredSales.forEach(s => {
+                (s.items || []).forEach(i => {
+                    if (!prodMap[i.name]) {
+                        prodMap[i.name] = { name: i.name, category: i.category, qty: 0, rev: 0 };
+                    }
+                    prodMap[i.name].qty += i.qty;
+                    prodMap[i.name].rev += (i.qty * i.price);
+                });
+            });
+
+            const rows = [
+                ['Ürün Adı', 'Kategori', 'Satılan Adet', 'Toplam Gelir (TL)']
+            ];
+            Object.values(prodMap)
+                .sort((a, b) => b.rev - a.rev)
+                .forEach(p => {
+                    rows.push([`"${p.name}"`, `"${p.category}"`, p.qty, p.rev.toFixed(2)]);
+                });
+
+            const csvContent = '\uFEFF' + rows.map(r => r.join(';')).join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `kafe_gelir_raporu_${activeReportPeriod}_${new Date().toISOString().slice(0,10)}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            showToast('Rapor CSV/Excel formatında indirildi', 'success');
+        }
+
+        // ==========================================
+        // ÜRÜN YÖNETİMİ (EKLE / DÜZENLE / SİL - FIREBASE)
+        // ==========================================
+        function renderProductManagement() {
+            const tbody = document.getElementById('manage-products-tbody');
+            if (!tbody) return;
+            const filterCat = document.getElementById('manage-category-filter').value;
+            document.getElementById('manage-product-count').textContent = products.length;
+
+            const filtered = products.filter(p => filterCat === 'all' || p.category === filterCat);
+
+            tbody.innerHTML = filtered.map(p => {
+                const img = p.image || CATEGORY_FALLBACK_IMAGES[p.category] || CATEGORY_FALLBACK_IMAGES['Kahveler'];
+                return `
+                    <tr class="hover:bg-cafe-800/50">
+                        <td class="py-2.5 px-4 font-bold text-white flex items-center gap-3">
+                            <img src="${img}" alt="${p.name}" class="w-11 h-11 rounded-xl object-cover border border-cafe-700 shrink-0" onerror="this.src='https://placehold.co/100x100/221f1c/f59e0b?text=Kafe'">
+                            <div>
+                                <div class="text-sm font-extrabold">${p.emoji || '☕'} ${p.name}</div>
+                            </div>
+                        </td>
+                        <td class="py-2.5 px-3 text-xs font-semibold text-stone-300">${p.category}</td>
+                        <td class="py-2.5 px-3 text-right font-black text-base text-amber-400">${formatTL(p.price)}</td>
+                        <td class="py-2.5 px-4 text-right space-x-2">
+                            <button onclick="editProduct('${p.id}')" class="px-3 py-1.5 rounded-lg bg-cafe-800 hover:bg-amber-500 hover:text-cafe-950 text-stone-200 text-xs font-bold">
+                                Düzenle
+                            </button>
+                            <button onclick="deleteProduct('${p.id}')" class="px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-bold">
+                                Sil
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function saveProductForm(e) {
+            e.preventDefault();
+            const idInput = document.getElementById('prod-id-input').value;
+            const name = document.getElementById('prod-name-input').value.trim();
+            const category = document.getElementById('prod-category-input').value;
+            const price = parseFloat(document.getElementById('prod-price-input').value);
+            const emoji = document.getElementById('prod-emoji-input').value.trim() || '☕';
+            const rawImg = document.getElementById('prod-image-input').value.trim();
+            const image = rawImg || CATEGORY_FALLBACK_IMAGES[category] || CATEGORY_FALLBACK_IMAGES['Kahveler'];
+
+            if (!name || isNaN(price)) return;
+
+            const prodId = idInput || ('prod_' + Date.now());
+            const prodObj = { id: prodId, name, category, price, emoji, image };
+
+            if (isCloudReady && currentUser) {
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', prodId), prodObj);
+                showToast(idInput ? 'Ürün bulutta güncellendi' : 'Yeni ürün buluta eklendi', 'success');
+            } else {
+                const idx = products.findIndex(p => p.id === prodId);
+                if (idx !== -1) products[idx] = prodObj;
+                else products.push(prodObj);
+                renderProductManagement();
+                renderPosCategories();
+                renderPosProducts();
+            }
+
+            resetProductForm();
+        }
+
+        function editProduct(id) {
+            const p = products.find(x => x.id === id);
+            if (!p) return;
+            document.getElementById('prod-id-input').value = p.id;
+            document.getElementById('prod-name-input').value = p.name;
+            document.getElementById('prod-category-input').value = p.category;
+            document.getElementById('prod-price-input').value = p.price;
+            document.getElementById('prod-emoji-input').value = p.emoji || '☕';
+            document.getElementById('prod-image-input').value = p.image || '';
+
+            document.getElementById('product-form-title').innerHTML = `<i data-lucide="edit-3" class="w-5 h-5 text-amber-400"></i><span>Ürünü Düzenle</span>`;
+            document.getElementById('prod-submit-text').textContent = 'Güncelle';
+            document.getElementById('prod-cancel-btn').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function resetProductForm() {
+            document.getElementById('product-form').reset();
+            document.getElementById('prod-id-input').value = '';
+            document.getElementById('product-form-title').innerHTML = `<i data-lucide="plus-circle" class="w-5 h-5 text-amber-400"></i><span>Yeni Ürün Ekle</span>`;
+            document.getElementById('prod-submit-text').textContent = 'Ürünü Buluta Kaydet';
+            document.getElementById('prod-cancel-btn').classList.add('hidden');
+            lucide.createIcons();
+        }
+
+        async function deleteProduct(id) {
+            if (isCloudReady && currentUser) {
+                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', id));
+            } else {
+                products = products.filter(p => p.id !== id);
+                renderProductManagement();
+                renderPosCategories();
+                renderPosProducts();
+            }
+            showToast('Ürün menüden kaldırıldı', 'info');
+        }
+
+        function resetDefaultProducts() {
+            openConfirmModal(
+                'Varsayılan Görselli Menüyü Yükle',
+                'Tüm varsayılan Kahve, İçecek, Pasta ve Pizza ürünleri fotoğraflarıyla birlikte buluta yüklenecek. Onaylıyor musunuz?',
+                async () => {
+                    if (isCloudReady && currentUser) {
+                        for (const p of DEFAULT_PRODUCTS) {
+                            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', p.id), p);
+                        }
+                    } else {
+                        products = [...DEFAULT_PRODUCTS];
+                        renderProductManagement();
+                        renderPosCategories();
+                        renderPosProducts();
+                    }
+                    showToast('Varsayılan fotoğraflı kafe menüsü yüklendi', 'success');
+                }
+            );
+        }
+
+        // --- KAFE & FİŞ AYARLARI MODALI ---
+        function applyCafeSettingsToUI() {
+            document.getElementById('cafe-name-display').textContent = cafeSettings.name;
+        }
+
+        function openCafeSettingsModal() {
+            document.getElementById('setting-cafe-name').value = cafeSettings.name;
+            document.getElementById('setting-cafe-sub').value = cafeSettings.subtitle;
+            document.getElementById('setting-cafe-footer').value = cafeSettings.footer;
+            document.getElementById('modal-container').classList.remove('hidden');
+        }
+
+        function closeCafeSettingsModal() {
+            document.getElementById('modal-container').classList.add('hidden');
+        }
+
+        async function saveCafeSettings(e) {
+            e.preventDefault();
+            cafeSettings.name = document.getElementById('setting-cafe-name').value.trim() || 'KAFE POS';
+            cafeSettings.subtitle = document.getElementById('setting-cafe-sub').value.trim();
+            cafeSettings.footer = document.getElementById('setting-cafe-footer').value.trim();
+            applyCafeSettingsToUI();
+            closeCafeSettingsModal();
+
+            if (isCloudReady && currentUser) {
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'cafe_config'), cafeSettings, { merge: true });
+            }
+            showToast('Kafe ve fiş başlık ayarları kaydedildi', 'success');
+        }
+
+        // --- ÖZEL ONAY MODALI ---
+        let confirmCallback = null;
+        function openConfirmModal(title, desc, onYes) {
+            document.getElementById('confirm-modal-title').textContent = title;
+            document.getElementById('confirm-modal-desc').textContent = desc;
+            confirmCallback = onYes;
+            document.getElementById('confirm-modal').classList.remove('hidden');
+            document.getElementById('confirm-modal-yes-btn').onclick = () => {
+                if (confirmCallback) confirmCallback();
+                closeConfirmModal();
+            };
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirm-modal').classList.add('hidden');
+            confirmCallback = null;
+        }
+
+        // --- BİLDİRİM (TOAST) SİSTEMİ ---
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const colors = {
+                success: 'bg-emerald-600 border-emerald-400 text-white keep-white',
+                error: 'bg-red-600 border-red-400 text-white keep-white',
+                info: 'bg-cafe-800 border-amber-500 text-amber-300'
+            };
+
+            toast.className = `px-4 py-3 rounded-xl border shadow-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition-all duration-300 ${colors[type] || colors.info}`;
+            toast.innerHTML = `<span>${message}</span>`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(10px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 2600);
+        }
+
+        // --- GLOBAL FONKSİYON BAĞLANTILARI (HTML onclick erişimi için) ---
+        Object.assign(window, {
+            switchTab,
+            toggleTheme,
+            selectPosCategory,
+            clearPosSearch,
+            renderPosProducts,
+            addToCart,
+            changeCartQty,
+            removeFromCart,
+            clearCart,
+            setPaymentMethod,
+            completeSale,
+            previewAndPrintCurrentCart,
+            reprintSale,
+            setReportPeriod,
+            renderReports,
+            deleteSaleRecord,
+            clearAllSalesHistory,
+            seedDemoSalesData,
+            exportReportCSV,
+            renderProductManagement,
+            saveProductForm,
+            editProduct,
+            resetProductForm,
+            deleteProduct,
+            resetDefaultProducts,
+            openCafeSettingsModal,
+            closeCafeSettingsModal,
+            saveCafeSettings,
+            closeConfirmModal
+        });
+
+        // --- BAŞLATMA ---
+        initClock();
+        renderPosCategories();
+        renderPosProducts();
+        renderCart();
+        updateHeaderStats();
+        lucide.createIcons();
+        initFirebaseSystem();
+    </script>
+</body>
+</html>
