@@ -1,507 +1,872 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TUSCO Rental Service | Dalyan - Web Sitemiz Bakımdadır / Under Maintenance</title>
-    <meta name="description" content="TUSCO Rental Service Dalyan, Ortaca, Muğla. Web sitemiz şu anda bakımdadır. İletişim: +90 539 543 07 77">
-    
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <!-- Google Fonts: Inter, Outfit & Noto Sans JP -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'Noto Sans JP', 'sans-serif'],
-                        display: ['Outfit', 'Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        dalyan: {
-                            teal: '#14b8a6',
-                            amber: '#f59e0b',
-                            gold: '#fbbf24',
-                            deep: '#042f2e'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-
-    <style>
-        /* Dalyan Arka Plan Katmanı - Hem anlaşılır hem de yazıları okunaklı kılan hafif blur */
-        .dalyan-bg-image {
-            background-image: 
-                url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Dalyan_rock_tombs_from_river.jpg/1920px-Dalyan_rock_tombs_from_river.jpg'),
-                url('https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1920&q=85');
-            background-size: cover;
-            background-position: center 35%;
-            background-repeat: no-repeat;
-            filter: blur(3.5px) brightness(0.82) saturate(1.18);
-            transform: scale(1.04); /* Blur kenar boşluklarını engeller */
-            transition: filter 0.5s ease;
-        }
-
-        /* Glassmorphism Kart Stilleri */
-        .glass-panel {
-            background: rgba(10, 25, 36, 0.62);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.16);
-        }
-
-        .glass-card-lang {
-            background: rgba(15, 32, 43, 0.58);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .glass-card-lang:hover, .glass-card-lang.active-lang {
-            background: rgba(20, 48, 62, 0.80);
-            border-color: rgba(251, 191, 36, 0.55);
-            transform: translateY(-2px);
-            box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(251, 191, 36, 0.15);
-        }
-
-        /* Domain Kutusu Parlama Efekti */
-        .domain-glow {
-            background: linear-gradient(135deg, rgba(15, 35, 48, 0.85) 0%, rgba(9, 25, 36, 0.92) 100%);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border: 1.5px solid rgba(251, 191, 36, 0.55);
-            box-shadow: 0 0 35px rgba(20, 184, 166, 0.25), 0 10px 30px rgba(0, 0, 0, 0.55);
-        }
-
-        /* Dişli Çark Animasyonu */
-        @keyframes spin-slow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        .animate-spin-slow {
-            animation: spin-slow 12s linear infinite;
-        }
-
-        /* Özel Kaydırma Çubuğu */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #071921;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #14b8a6;
-            border-radius: 3px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TUSCO Rental Service | Dalyan Bisiklet, E-Bike, ATV, UTV, SUP & Engelli Aracı Kiralama</title>
+  <meta name="description" id="metaDesc" content="Dalyan'da bisiklet, e-bike, ATV, UTV, SUP ve engelli aracı kiralama. Otele ücretsiz teslimat, kask ve kilit dahil. 30 araç modeli, anında rezervasyon.">
+  <meta name="keywords" content="Dalyan araç kiralama, Dalyan bisiklet kiralama, Dalyan ATV kiralama, Dalyan UTV safari, Dalyan SUP kiralama, Dalyan e-bike, Ortaca araç kiralama, İztuzu bisiklet, Kaunos bisiklet turu">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <meta name="author" content="TUSCO Rental Service">
+  <meta name="theme-color" content="#14100e">
+  <meta name="geo.region" content="TR-48">
+  <meta name="geo.placename" content="Dalyan, Ortaca, Muğla">
+  <link rel="canonical" id="seoCanonical" href="">
+  <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta property="og:site_name" content="TUSCO Rental Service">
+  <meta property="og:type" id="ogType" content="website">
+  <meta property="og:title" id="ogTitle" content="TUSCO Rental Service | Dalyan Araç Kiralama">
+  <meta property="og:description" id="ogDesc" content="Dalyan'da bisiklet, e-bike, ATV, UTV, SUP ve engelli aracı kiralama. Otele ücretsiz teslimat.">
+  <meta property="og:url" id="ogUrl" content="">
+  <meta property="og:image" id="ogImage" content="https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=1200&q=80">
+  <meta property="og:locale" content="tr_TR">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" id="twTitle" content="TUSCO Rental Service | Dalyan Araç Kiralama">
+  <meta name="twitter:description" id="twDesc" content="Dalyan'da bisiklet, e-bike, ATV, UTV, SUP ve engelli aracı kiralama.">
+  <meta name="twitter:image" id="twImage" content="https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=1200&q=80">
+  <script type="application/ld+json" id="ldBusiness">
+  {"@context":"https://schema.org","@type":"LocalBusiness","name":"TUSCO Rental Service","description":"Dalyan'da bisiklet, e-bike, ATV, UTV, SUP ve engelli aracı kiralama hizmeti.","image":"https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=1200&q=80","priceRange":"₺₺","address":{"@type":"PostalAddress","streetAddress":"Maraş Caddesi No:14","addressLocality":"Dalyan","addressRegion":"Muğla","addressCountry":"TR"},"areaServed":["Dalyan","Ortaca","Köyceğiz","İztuzu"],"openingHours":"Mo-Su 00:00-23:59"}
+  </script>
+  <script type="application/ld+json" id="ldList"></script>
+  <script type="application/ld+json" id="ldProduct"></script>
+  <link rel="stylesheet" href="tusco.css">
 </head>
-<body class="min-h-screen w-full text-white font-sans relative overflow-x-hidden flex flex-col justify-between selection:bg-amber-400 selection:text-slate-950">
+<body>
 
-    <!-- ARKA PLAN: Dalyan Kral Mezarları & Nehir Manzarasının Blurlu ve Anlaşılır Görseli -->
-    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <!-- Gerçek Dalyan Fotoğraf Katmanı -->
-        <div id="bgLayer" class="dalyan-bg-image absolute inset-0 w-full h-full"></div>
+  <div id="dbLoadingOverlay" hidden><p id="dbLoadingStatus"></p></div>
 
-        <!-- Yedek & Estetik Dalyan Silüet Katmanı (Kral Mezarları ve Nehir atmosferini güçlendirir) -->
-        <svg class="absolute bottom-0 left-0 w-full h-48 opacity-20 pointer-events-none" viewBox="0 0 1440 320" preserveAspectRatio="none">
-            <path fill="#042f2e" fill-opacity="0.9" d="M0,192L60,197.3C120,203,240,213,360,197.3C480,181,600,139,720,138.7C840,139,960,181,1080,197.3C1200,213,1320,203,1380,197.3L1440,192L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
-        </svg>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container nav-row">
+      <div class="brand-wrapper" onclick="window.location.href='index.html'">
+        <div class="brand-icon">T</div>
+        <div>
+          <div class="brand-title">
+            <span style="color: #fff;">TUSCO</span>
+            <span class="badge-tag" lang="en">Rental Service</span>
+          </div>
+          <span class="brand-subtitle" lang="en">Dalyan Adventure & Mobility Hub</span>
+        </div>
+      </div>
 
-        <!-- Okunabilirliği Artıran Hafif Karartma Gradyanı (Fotoğrafı kapatmaz, yazıları netleştirir) -->
-        <div class="absolute inset-0 bg-gradient-to-b from-slate-950/65 via-slate-900/40 to-slate-950/85"></div>
+      <div class="nav-actions">
+        <select id="langSelector" onchange="window.changeLanguage(this.value)" class="form-select" style="cursor: pointer; font-weight: 700;">
+          <option value="tr">🇹🇷 Türkçe</option>
+          <option value="en">🇬🇧 English</option>
+          <option value="ru">🇷🇺 Русский</option>
+          <option value="de">🇩🇪 Deutsch</option>
+          <option value="ja">🇯🇵 日本語</option>
+        </select>
+
+        <button onclick="window.location.href='rotalar.html'" id="btnRoutesNav" class="btn btn-accent">
+          🗺️ 30 Gezi Rotası
+        </button>
+
+        <button onclick="window.location.href='yonet.html'" id="btnAdminText" class="btn btn-primary">
+          🔒 Yönetici Paneli
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-pill" id="heroBadge">Dalyan Adventure & Mobility Hub</div>
+      <h1 class="hero-title" id="heroTitle">TUSCO Rental Service ile Dalyan'ı Keşfet</h1>
+      <p class="hero-sub" id="heroSub">Bisiklet, SUP, ATV, UTV, E-Bike ve Engelli araçlarıyla doğanın kalbinde özgürce hareket edin.</p>
+
+      <div class="perks-bar">
+        <div class="perk-badge">🛡️ <span id="perk1">Kask ve kilit seti dahil</span></div>
+        <div class="perk-badge">🏨 <span id="perk2">Dalyan İçi Otele Ücretsiz Teslimat</span></div>
+        <div class="perk-badge">📞 <span id="perk3">7/24 TUSCO Yol Yardımı</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="container" style="padding-bottom: 5rem;">
+    
+    <div class="toolbar-row">
+      <div>
+        <h2 id="catalogTitle" class="section-title">Kiralık Araç & Macera Filosu</h2>
+        <p id="catalogSub" class="section-sub">30 ayrı araç modelinden keşfinize en uygun olanı seçin.</p>
+      </div>
+      <div>
+        <input type="text" id="searchInput" placeholder="Araç adı ara..." class="form-input" style="min-width: min(260px, 100%);" aria-label="Search" oninput="window.filterVehicles(this.value)">
+      </div>
     </div>
 
-    <!-- ÜST BAR: Marka Logosu & Dalyan Konum Rozeti -->
-    <header class="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 pt-5 pb-2 flex flex-wrap items-center justify-between gap-3">
-        <div class="flex items-center gap-3.5">
-            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-teal-500 p-0.5 shadow-lg shadow-teal-950/50">
-                <div class="w-full h-full bg-slate-950/90 rounded-[14px] flex items-center justify-center relative">
-                    <i class="fa-solid fa-car-side text-amber-400 text-lg"></i>
-                    <i class="fa-solid fa-gear text-teal-300 text-xs absolute -top-1 -right-1 bg-slate-900 rounded-full p-1 animate-spin-slow"></i>
-                </div>
-            </div>
-            <div>
-                <h1 class="font-display font-extrabold text-xl sm:text-2xl tracking-wider text-white flex items-center gap-2">
-                    TUSCO <span class="text-amber-400 font-semibold">RENTAL SERVICE</span>
-                </h1>
-                <p class="text-xs text-teal-200/90 tracking-wide flex items-center gap-1.5">
-                    <i class="fa-solid fa-location-dot text-amber-400"></i>
-                    Dalyan, Ortaca / Muğla
-                </p>
-            </div>
-        </div>
+    <!-- Category Tabs -->
+    <div class="tabs-scroll" id="categoryTabs">
+      <button class="tab-btn active" data-cat="all" onclick="window.setCategory('all', this)">Tüm Araçlar (30)</button>
+      <button class="tab-btn" data-cat="bike" onclick="window.setCategory('bike', this)">Bisikletler</button>
+      <button class="tab-btn" data-cat="sup" onclick="window.setCategory('sup', this)">Paddle Board (SUP)</button>
+      <button class="tab-btn" data-cat="atv" onclick="window.setCategory('atv', this)">ATV & Quad</button>
+      <button class="tab-btn" data-cat="utv" onclick="window.setCategory('utv', this)">Safari UTV</button>
+      <button class="tab-btn" data-cat="ebike" onclick="window.setCategory('ebike', this)">Elektrikli Bisiklet</button>
+      <button class="tab-btn" data-cat="tripod" onclick="window.setCategory('tripod', this)">3 Tekerli Tripod</button>
+      <button class="tab-btn" data-cat="disabled" onclick="window.setCategory('disabled', this)">Engelli Aracı</button>
+    </div>
 
-        <!-- Sağ Üst: Canlı Durum & Arka Plan Netlik Kontrolü -->
-        <div class="flex items-center gap-2.5">
-            <div class="glass-panel px-3.5 py-1.5 rounded-full flex items-center gap-2 text-xs sm:text-sm font-medium text-amber-200">
-                <span class="relative flex h-2.5 w-2.5">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-400"></span>
-                </span>
-                <span>Bakım Modu / Maintenance</span>
-            </div>
-            <button id="toggleBlurBtn" onclick="toggleBackgroundClarity()" title="Arka Plan Dalyan Görselini Netleştir / Bulanıklaştır" class="glass-panel hover:border-amber-400/60 px-3 py-1.5 rounded-full text-xs text-slate-200 flex items-center gap-1.5 transition cursor-pointer">
-                <i class="fa-solid fa-mountain-sun text-teal-300"></i>
-                <span class="hidden sm:inline" id="blurBtnText">Dalyan Manzarası</span>
-            </button>
-        </div>
-    </header>
+    <!-- 30 Vehicles Grid (4 Columns) -->
+    <div class="grid-4" id="vehiclesGrid"></div>
+    <noscript><nav aria-label="Araç listesi"><h2>TUSCO Rental Service - Dalyan Araç Kiralama</h2><ul><li><a href="?arac=dalyan-sehir-tur-bisikleti-v1">Dalyan Şehir &amp; Tur Bisikleti</a></li><li><a href="?arac=rockhopper-29-dag-bisikleti-v2">RockHopper 29&quot; Dağ Bisikleti</a></li><li><a href="?arac=karbon-masa-gravel-yol-bisikleti-v3">Karbon Maşa Gravel Yol Bisikleti</a></li><li><a href="?arac=cift-kisilik-tandem-bisiklet-v4">Çift Kişilik Tandem Bisiklet</a></li><li><a href="?arac=retro-vintage-sepetli-cruiser-v5">Retro Vintage Sepetli Cruiser</a></li><li><a href="?arac=aquamarina-all-around-sup-v6">AquaMarina All-Around SUP</a></li><li><a href="?arac=touring-pro-uzun-mesafe-sup-v7">Touring Pro Uzun Mesafe SUP</a></li><li><a href="?arac=family-cift-kisilik-mega-sup-v8">Family Çift Kişilik Mega SUP</a></li><li><a href="?arac=yoga-denge-ozel-sup-v9">Yoga &amp; Denge Özel SUP</a></li><li><a href="?arac=kymco-150cc-otomatik-quad-v10">Kymco 150cc Otomatik Quad</a></li><li><a href="?arac=cfmoto-450cc-4x4-safari-atv-v11">CFMoto 450cc 4x4 Safari ATV</a></li><li><a href="?arac=linhai-300cc-2-kisilik-konfor-quad-v12">Linhai 300cc 2 Kişilik Konfor Quad</a></li><li><a href="?arac=polaris-sportsman-570-eps-v13">Polaris Sportsman 570 EPS</a></li><li><a href="?arac=tgb-blade-600cc-agir-arazi-atv-v14">TGB Blade 600cc Ağır Arazi ATV</a></li><li><a href="?arac=can-am-commander-2-kisilik-utv-v15">Can-Am Commander 2 Kişilik UTV</a></li><li><a href="?arac=polaris-rzr-4-kisilik-aile-utv-v16">Polaris RZR 4 Kişilik Aile UTV</a></li><li><a href="?arac=yamaha-wolverine-x2-850cc-v17">Yamaha Wolverine X2 850cc</a></li><li><a href="?arac=cfmoto-zforce-1000-sport-v18">CFMoto ZForce 1000 Sport</a></li><li><a href="?arac=dalyan-eco-kalin-teker-fat-e-bike-v19">Dalyan Eco Kalın Teker Fat E-Bike</a></li><li><a href="?arac=katlanir-kompakt-sehir-e-bike-v20">Katlanır Kompakt Şehir E-Bike</a></li><li><a href="?arac=bosch-motorlu-uzun-menzil-e-bike-v21">Bosch Motorlu Uzun Menzil E-Bike</a></li><li><a href="?arac=retro-chopper-elektrikli-cruiser-v22">Retro Chopper Elektrikli Cruiser</a></li><li><a href="?arac=cift-bataryali-dag-e-mtb-v23">Çift Bataryalı Dağ E-MTB</a></li><li><a href="?arac=tripod-trike-3-tekerli-e-scooter-v24">Tripod Trike 3 Tekerli E-Scooter</a></li><li><a href="?arac=2-kisilik-kapali-kabinli-e-trike-v25">2 Kişilik Kapalı Kabinli E-Trike</a></li><li><a href="?arac=citytrike-koltuklu-bagajli-tripod-v26">CityTrike Koltuklu Bagajlı Tripod</a></li><li><a href="?arac=tenteli-gezi-tuk-tuk-e-tripod-v27">Tenteli Gezi Tuk-Tuk E-Tripod</a></li><li><a href="?arac=ortopedik-kaptan-koltuklu-engelli-scooter-v28">Ortopedik Kaptan Koltuklu Engelli Scooter</a></li><li><a href="?arac=buyuk-tekerli-arazi-mobilite-araci-v29">Büyük Tekerli Arazi Mobilite Aracı</a></li><li><a href="?arac=katlanir-lityum-akulu-tekerlekli-sandalye-v30">Katlanır Lityum Akülü Tekerlekli Sandalye</a></li></ul></nav></noscript>
 
-    <!-- ANA İÇERİK: 5 Dilde Bakım Bildirimi + Ortadan Biraz Aşağıda Domain Adresi -->
-    <main class="relative z-10 flex-grow flex flex-col justify-center items-center w-full max-w-5xl mx-auto px-4 sm:px-6 py-4">
-        
-        <!-- Seçili Dil Vurgu Başlığı -->
-        <div class="glass-panel rounded-3xl p-5 sm:p-7 w-full text-center shadow-2xl mb-5 border border-white/15">
-            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-400/15 border border-amber-400/30 text-amber-300 text-xs font-semibold uppercase tracking-widest mb-3">
-                <i class="fa-solid fa-screwdriver-wrench animate-bounce"></i>
-                <span id="spotlightBadge">SİSTEM YENİLENİYOR • SYSTEM UPGRADE</span>
-            </div>
+    <!-- Dedicated Routes Page Banner -->
+    <div class="promo-card">
+      <h2 id="routesTitle" class="promo-title">Dalyan Çevresi 30 Gezi Rotası</h2>
+      <p id="routesSub" class="promo-sub">Kaunos Antik Kenti, İztuzu Plajı, Sülüngür Gölü ve dağ patikalarını özel rotalar sayfasında inceleyin.</p>
+      <div>
+        <button onclick="window.location.href='rotalar.html'" id="btnExploreRoutes" class="btn btn-primary" style="padding: 0.85rem 2rem; font-size: 0.95rem;">
+          🗺️ 30 Gezi Rotası Sayfasına Git →
+        </button>
+      </div>
+    </div>
 
-            <!-- Ana Aktif Mesaj (Tıklanan veya otomatik dönen dil burada büyük görünür, altında 5 dilin tamamı aynı anda listelenir) -->
-            <h2 id="spotlightTitle" class="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-tight mb-2 transition-all duration-300">
-                Web sitemiz şu anda bakımdadır.
-            </h2>
-            <p id="spotlightSub" class="text-sm sm:text-base text-slate-200 max-w-2xl mx-auto">
-                En kısa sürede yenilenmiş yüzümüzle tekrar hizmetinizdeyiz!
-            </p>
-        </div>
+  </main>
 
-        <!-- 5 DİLİN TAMAMI (Türkçe, İngilizce, Rusça, Almanca, Japonca) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3 w-full mb-6">
-            
-            <!-- 1. TÜRKÇE -->
-            <div onclick="highlightLang(0)" id="lang-card-0" class="glass-card-lang active-lang lg:col-span-2 rounded-2xl p-4 cursor-pointer flex flex-col justify-between">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-400">
-                        <span class="text-base">🇹🇷</span> Türkçe
-                    </span>
-                    <span class="text-[11px] px-2 py-0.5 rounded-full bg-white/10 text-slate-300">TR</span>
-                </div>
-                <p class="text-sm sm:text-[15px] font-medium text-white leading-snug">
-                    Web sitemiz şu anda bakımdadır. En kısa sürede yenilenmiş yüzümüzle tekrar hizmetinizdeyiz!
-                </p>
-            </div>
+  <!-- Araç detay paneli: araca tıklanınca sayfa değişmeden doğrudan ekrana gelir -->
+  <div id="vehOverlay" class="veh-overlay" style="display:none;" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="vehTitle">
+    <div class="veh-bar">
+      <div class="brand-wrapper" onclick="window.closeVehicle()">
+        <div class="brand-icon">T</div>
+        <div class="brand-title"><span style="color:#fff;">TUSCO</span><span class="badge-tag" lang="en">Rental Service</span></div>
+      </div>
+      <button id="vehClose" class="btn btn-outline" onclick="window.closeVehicle()"><span id="vehCloseTxt">← Tüm Araçlara Dön</span></button>
+    </div>
+    <div class="veh-wrap" id="vehContent"></div>
+  </div>
 
-            <!-- 2. ENGLISH -->
-            <div onclick="highlightLang(1)" id="lang-card-1" class="glass-card-lang lg:col-span-2 rounded-2xl p-4 cursor-pointer flex flex-col justify-between">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-teal-300">
-                        <span class="text-base">🇬🇧</span> English
-                    </span>
-                    <span class="text-[11px] px-2 py-0.5 rounded-full bg-white/10 text-slate-300">EN</span>
-                </div>
-                <p class="text-sm sm:text-[15px] font-medium text-white leading-snug">
-                    Our website is currently under maintenance. We will be back shortly!
-                </p>
-            </div>
+  <!-- Floating WhatsApp -->
+  <div class="floating-whatsapp">
+    <div class="wa-pill" id="waPillText">Canlı Destek / WhatsApp</div>
+    <button onclick="window.openWhatsAppChat()" class="wa-btn" aria-label="WhatsApp">💬</button>
+  </div>
 
-            <!-- 3. РУССКИЙ (RUSSIAN) -->
-            <div onclick="highlightLang(2)" id="lang-card-2" class="glass-card-lang lg:col-span-2 rounded-2xl p-4 cursor-pointer flex flex-col justify-between">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-sky-300">
-                        <span class="text-base">🇷🇺</span> Русский
-                    </span>
-                    <span class="text-[11px] px-2 py-0.5 rounded-full bg-white/10 text-slate-300">RU</span>
-                </div>
-                <p class="text-sm sm:text-[15px] font-medium text-white leading-snug">
-                    Наш сайт сейчас находится на техническом обслуживании. Скоро мы снова будем с вами!
-                </p>
-            </div>
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container" style="display: flex; flex-direction: column; gap: 1rem; text-align: center;">
+      <div style="font-weight: 800; font-size: 1.1rem; color: #fff;">TUSCO Rental Service</div>
+      <p style="font-size: 0.8rem;">Maraş Caddesi No:14, Dalyan / Ortaca / Muğla</p>
+      <p style="font-size: 0.75rem; color: var(--text-muted);">© 2026 TUSCO Rental Service. Tüm hakları saklıdır.</p>
+    </div>
+  </footer>
 
-            <!-- 4. DEUTSCH (GERMAN) -->
-            <div onclick="highlightLang(3)" id="lang-card-3" class="glass-card-lang lg:col-span-3 rounded-2xl p-4 cursor-pointer flex flex-col justify-between">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-300">
-                        <span class="text-base">🇩🇪</span> Deutsch
-                    </span>
-                    <span class="text-[11px] px-2 py-0.5 rounded-full bg-white/10 text-slate-300">DE</span>
-                </div>
-                <p class="text-sm sm:text-[15px] font-medium text-white leading-snug">
-                    Unsere Website wird derzeit gewartet. Wir sind in Kürze wieder für Sie da!
-                </p>
-            </div>
+  <!-- Dil Kütüphanesi Yükleyici (dil.html fetch + Fallback) -->
+  <script>
+    const FALLBACK_TRANSLATIONS = {
+      tr: {
+        heroBadge: "TUSCO Rental Service - Dalyan'ın En Geniş Filosu",
+        heroTitle: "TUSCO Rental Service ile Dalyan'ı Keşfet",
+        heroSub: "Bisiklet, SUP, ATV, UTV, E-Bike ve Engelli araçlarıyla doğanın kalbinde özgürce hareket edin.",
+        perk1: "Kask ve kilit seti dahil",
+        perk2: "Dalyan İçi Otele Ücretsiz Teslimat",
+        perk3: "7/24 TUSCO Yol Yardımı",
+        catalogTitle: "Kiralık Araç & Macera Filosu",
+        catalogSub: "30 ayrı araç modelinden keşfinize en uygun olanı seçin.",
+        routesTitle: "Dalyan Çevresi 30 Gezi Rotası",
+        routesSub: "Kaunos Antik Kenti, İztuzu, Sülüngür Gölü ve dağ patikaları.",
+        searchPh: "Araç adı veya özellik ara...",
+        bookNow: "İncele & Kirala",
+        perDay: "/ gün",
+        routesBtn: "🗺️ 30 Gezi Rotası",
+        adminBtn: "🔒 Yönetici Paneli",
+        waPill: "Canlı Destek / WhatsApp",
+        waGreeting: "Merhaba TUSCO Rental Service, araç kiralamak ve bilgi almak istiyorum.",
+        cats: { all: "Tüm Araçlar (30)", bike: "Bisikletler", bisiklet: "Bisikletler", sup: "Paddle Board (SUP)", paddleboard: "Paddle Board (SUP)", atv: "ATV & Quad", "atv-quad": "ATV & Quad", utv: "Safari UTV", ebike: "Elektrikli Bisiklet", tripod: "3 Tekerli Tripod", disabled: "Engelli Aracı", engelli: "Engelli Aracı" }
+      },
+      en: {
+        heroBadge: "TUSCO Rental Service - Dalyan's Largest Fleet",
+        heroTitle: "Explore Dalyan with TUSCO Rental Service",
+        heroSub: "Move freely in the heart of nature with Bicycles, SUPs, ATVs, UTVs, E-Bikes and Mobility Scooters.",
+        perk1: "Helmet & lock set included",
+        perk2: "Free Delivery to Dalyan Hotels",
+        perk3: "24/7 TUSCO Roadside Assistance",
+        catalogTitle: "Rental Vehicle & Adventure Fleet",
+        catalogSub: "Choose the perfect ride from 30 models for your excursion.",
+        routesTitle: "30 Scenic Dalyan Excursion Routes",
+        routesSub: "Kaunos Ancient City, Iztuzu Beach, Lake Sülüngür and mountain trails.",
+        searchPh: "Search vehicle name...",
+        bookNow: "Inspect & Rent",
+        perDay: "/ day",
+        routesBtn: "🗺️ 30 Excursion Routes",
+        adminBtn: "🔒 Admin Panel",
+        waPill: "Live Chat / WhatsApp",
+        waGreeting: "Hello TUSCO Rental Service, I would like to inquire about vehicle rentals.",
+        cats: { all: "All Vehicles (30)", bike: "Bicycles", bisiklet: "Bicycles", sup: "Paddle Board (SUP)", paddleboard: "Paddle Board (SUP)", atv: "ATV & Quad", "atv-quad": "ATV & Quad", utv: "Safari UTV", ebike: "Electric Bikes", tripod: "3-Wheel Trikes", disabled: "Mobility Scooters", engelli: "Mobility Scooters" }
+      },
+      ru: {
+        heroBadge: "TUSCO Rental Service - Самый большой автопарк Дальяна",
+        heroTitle: "Откройте Дальян с TUSCO Rental Service",
+        heroSub: "Исследуйте природу на велосипедах, САПах, квадроциклах, багги, электровелосипедах и скутерах.",
+        perk1: "Шлем и замок включены",
+        perk2: "Бесплатная доставка в отели Дальяна",
+        perk3: "24/7 Помощь на дорогах TUSCO",
+        catalogTitle: "Автопарк и приключения",
+        catalogSub: "Выберите транспорт из 30 моделей для вашего путешествия.",
+        routesTitle: "30 Живописных Маршрутов Дальяна",
+        routesSub: "Древний город Каунос, пляж Изтузу, озеро Сюлюнгюр и горные тропы.",
+        searchPh: "Поиск транспорта...",
+        bookNow: "Выбрать и арендовать",
+        perDay: "/ день",
+        routesBtn: "🗺️ 30 Маршрутов",
+        adminBtn: "🔒 Админ панель",
+        waPill: "Чат / WhatsApp",
+        waGreeting: "Здравствуйте TUSCO Rental Service, я хочу арендовать транспорт.",
+        cats: { all: "Все модели (30)", bike: "Велосипеды", bisiklet: "Велосипеды", sup: "САП-борды", paddleboard: "САП-борды", atv: "Квадроциклы", "atv-quad": "Квадроциклы", utv: "Багги (UTV)", ebike: "Электровелосипеды", tripod: "Трициклы", disabled: "Для инвалидов", engelli: "Для инвалидов" }
+      },
+      de: {
+        heroBadge: "TUSCO Rental Service - Dalyans größte Flotte",
+        heroTitle: "Entdecken Sie Dalyan mit TUSCO Rental Service",
+        heroSub: "Erkunden Sie die Natur mit Fahrrädern, SUPs, ATVs, UTVs, E-Bikes und E-Mobilen.",
+        perk1: "Helm & Schloss inklusive",
+        perk2: "Kostenlose Lieferung zum Hotel in Dalyan",
+        perk3: "24/7 TUSCO Pannenhilfe",
+        catalogTitle: "Mietfahrzeug- & Abenteuerflotte",
+        catalogSub: "Wählen Sie das perfekte Gefährt aus 30 Modellen.",
+        routesTitle: "30 Malerische Routen rund um Dalyan",
+        routesSub: "Kaunos Ruinen, Iztuzu Strand, Sülüngür See und Bergpässe.",
+        searchPh: "Fahrzeug suchen...",
+        bookNow: "Ansehen & Mieten",
+        perDay: "/ Tag",
+        routesBtn: "🗺️ 30 Ausflugsrouten",
+        adminBtn: "🔒 Admin-Bereich",
+        waPill: "Live-Chat / WhatsApp",
+        waGreeting: "Hallo TUSCO Rental Service, ich möchte ein Fahrzeug mieten.",
+        cats: { all: "Alle Fahrzeuge (30)", bike: "Fahrräder", bisiklet: "Fahrräder", sup: "Stand-Up Paddle (SUP)", paddleboard: "Stand-Up Paddle (SUP)", atv: "ATV & Quad", "atv-quad": "ATV & Quad", utv: "Safari UTV", ebike: "E-Bikes", tripod: "Dreiräder", disabled: "Seniorenmobil", engelli: "Seniorenmobil" }
+      },
+      ja: {
+        heroBadge: "TUSCO レンタルサービス - ダルヤン最大級のフリート",
+        heroTitle: "TUSCO Rental Serviceで巡るダルヤン",
+        heroSub: "自転車、SUP、ATV、UTV、E-Bike、バリアフリー車両で大自然を満喫しましょう。",
+        perk1: "ヘルメット＆ロックセット付き",
+        perk2: "ダルヤン市内ホテルへの無料配車",
+        perk3: "24時間年中無休ロードサービス",
+        catalogTitle: "レンタル車両＆アドベンチャー車両",
+        catalogSub: "30台の多彩なモデルから最適な乗り物をお選びください。",
+        routesTitle: "ダルヤン周辺 30の絶景ルート",
+        routesSub: "カウノス古代遺跡、イズツズビーチ、スリュングュル湖。",
+        searchPh: "車両を検索...",
+        bookNow: "詳細・予約",
+        perDay: "/ 日",
+        routesBtn: "🗺️ 30の観光ルート",
+        adminBtn: "🔒 管理パネル",
+        waPill: "ライブチャット / WhatsApp",
+        waGreeting: "こんにちは、TUSCO Rental Serviceで乗り物をレンタルしたいです。",
+        cats: { all: "全車両 (30)", bike: "自転車", bisiklet: "自転車", sup: "パドルボード (SUP)", paddleboard: "パドルボード (SUP)", atv: "四輪バギー (ATV)", "atv-quad": "四輪バギー (ATV)", utv: "サファリ UTV", ebike: "電動自転車 (E-Bike)", tripod: "3輪トライク", disabled: "バリアフリー車両", engelli: "バリアフリー車両" }
+      }
+    };
 
-            <!-- 5. 日本語 (JAPANESE) -->
-            <div onclick="highlightLang(4)" id="lang-card-4" class="glass-card-lang lg:col-span-3 rounded-2xl p-4 cursor-pointer flex flex-col justify-between">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-rose-300">
-                        <span class="text-base">🇯🇵</span> 日本語
-                    </span>
-                    <span class="text-[11px] px-2 py-0.5 rounded-full bg-white/10 text-slate-300">JP</span>
-                </div>
-                <p class="text-sm sm:text-[15px] font-medium text-white leading-snug">
-                    現在、ウェブサイトのメンテナンスを行っております。まもなく再開いたしますので、今しばらくお待ちください。
-                </p>
-            </div>
+    window.TUSCO_TRANSLATIONS = FALLBACK_TRANSLATIONS;
 
-        </div>
-
-        <!-- SAYFANIN ORTASINDAN BİRAZ AŞAĞIDA YER ALAN DOMAİN ADRESİ BÖLÜMÜ -->
-        <div class="w-full flex flex-col items-center justify-center mt-2 mb-2">
-            <div class="domain-glow rounded-2xl px-6 py-4 sm:px-10 sm:py-5 flex flex-col sm:flex-row items-center gap-3 sm:gap-5 max-w-xl w-full justify-between transition transform hover:scale-[1.01]">
-                <div class="flex items-center gap-3.5 text-center sm:text-left">
-                    <div class="w-11 h-11 rounded-xl bg-amber-400/20 border border-amber-400/40 flex items-center justify-center text-amber-300 shrink-0">
-                        <i class="fa-solid fa-globe text-xl animate-pulse"></i>
-                    </div>
-                    <div>
-                        <span class="text-[11px] uppercase tracking-widest text-teal-300 font-semibold block">
-                            Resmi Web Adresimiz • Official Domain
-                        </span>
-                        <span id="domainDisplay" class="font-display text-lg sm:text-2xl font-bold tracking-wide text-white break-all">
-                            www.tuscorentalservice.com
-                        </span>
-                    </div>
-                </div>
-
-                <button onclick="copyDomainAddress()" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-amber-400 hover:text-slate-950 text-xs font-semibold text-slate-200 transition flex items-center gap-1.5 shrink-0 cursor-pointer">
-                    <i id="copyIcon" class="fa-regular fa-copy"></i>
-                    <span id="copyText">Adresi Kopyala</span>
-                </button>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- ALT TARAF: İLETİŞİM NUMARALARI, MAİL VE ADRES BİLGİLERİ -->
-    <footer class="relative z-10 w-full mt-auto pt-2 pb-5 px-4 sm:px-6">
-        <div class="max-w-5xl mx-auto glass-panel rounded-3xl p-4 sm:p-6 shadow-2xl border border-white/20">
-            
-            <div class="text-center mb-4">
-                <p class="text-xs sm:text-sm uppercase tracking-widest text-amber-300 font-semibold">
-                    7/24 İletişim & Rezervasyon • Contact Us Directly
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 items-stretch">
-                
-                <!-- TELEFON & WHATSAPP -->
-                <div class="bg-slate-900/75 border border-white/10 rounded-2xl p-4 flex flex-col justify-between hover:border-teal-400/50 transition">
-                    <div class="flex items-center gap-3 mb-3">
-                        <div class="w-10 h-10 rounded-xl bg-teal-500/20 border border-teal-400/30 flex items-center justify-center text-teal-300 shrink-0">
-                            <i class="fa-solid fa-phone-volume text-lg"></i>
-                        </div>
-                        <div>
-                            <span class="text-xs text-slate-400 block">Telefon / WhatsApp</span>
-                            <a href="tel:+905395430777" class="font-display font-bold text-base sm:text-lg text-white hover:text-amber-300 transition">
-                                +90 539 543 07 77
-                            </a>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <a href="tel:+905395430777" class="py-2 px-3 rounded-xl bg-teal-600/80 hover:bg-teal-500 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition">
-                            <i class="fa-solid fa-phone"></i> Hemen Ara
-                        </a>
-                        <a href="https://wa.me/905395430777" target="_blank" rel="noopener noreferrer" class="py-2 px-3 rounded-xl bg-emerald-600/80 hover:bg-emerald-500 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition">
-                            <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
-                        </a>
-                    </div>
-                </div>
-
-                <!-- E-POSTA ADRESİ -->
-                <div class="bg-slate-900/75 border border-white/10 rounded-2xl p-4 flex flex-col justify-between hover:border-amber-400/50 transition">
-                    <div class="flex items-center gap-3 mb-3">
-                        <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-300 shrink-0">
-                            <i class="fa-solid fa-envelope-open-text text-lg"></i>
-                        </div>
-                        <div class="overflow-hidden">
-                            <span class="text-xs text-slate-400 block">E-Posta / E-Mail</span>
-                            <a href="mailto:tuscorenralservice@gmail.com" class="font-display font-bold text-sm sm:text-base text-white hover:text-amber-300 transition truncate block" title="tuscorenralservice@gmail.com">
-                                tuscorenralservice@gmail.com
-                            </a>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <a href="mailto:tuscorenralservice@gmail.com" class="py-2 px-3 rounded-xl bg-amber-500/80 hover:bg-amber-400 text-slate-950 text-xs font-bold flex items-center justify-center gap-1.5 transition">
-                            <i class="fa-solid fa-paper-plane"></i> Mail Gönder
-                        </a>
-                        <button onclick="copyEmailAddress()" class="py-2 px-3 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer">
-                            <i id="emailCopyIcon" class="fa-regular fa-copy"></i> <span id="emailCopyText">Kopyala</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- KONUM / ADRES -->
-                <div class="bg-slate-900/75 border border-white/10 rounded-2xl p-4 flex flex-col justify-between hover:border-sky-400/50 transition">
-                    <div class="flex items-center gap-3 mb-3">
-                        <div class="w-10 h-10 rounded-xl bg-sky-500/20 border border-sky-400/30 flex items-center justify-center text-sky-300 shrink-0">
-                            <i class="fa-solid fa-map-location-dot text-lg"></i>
-                        </div>
-                        <div>
-                            <span class="text-xs text-slate-400 block">Adres / Location</span>
-                            <span class="font-display font-bold text-base sm:text-lg text-white block">
-                                Dalyan, Ortaca / Muğla
-                            </span>
-                        </div>
-                    </div>
-                    <a href="https://www.google.com/maps/search/?api=1&query=Dalyan+Ortaca+Mugla" target="_blank" rel="noopener noreferrer" class="w-full py-2 px-3 rounded-xl bg-sky-600/80 hover:bg-sky-500 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition">
-                        <i class="fa-solid fa-location-arrow"></i> Haritada Göster (Google Maps)
-                    </a>
-                </div>
-
-            </div>
-
-            <!-- Alt Telif Satırı -->
-            <div class="mt-4 pt-3 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-2">
-                <span>© <span id="currentYear">2026</span> <strong class="text-slate-200">TUSCO Rental Service</strong> • Dalyan, Ortaca, Muğla</span>
-                <span class="flex items-center gap-3">
-                    <span>🇹🇷</span><span>🇬🇧</span><span>🇷🇺</span><span>🇩🇪</span><span>🇯🇵</span>
-                </span>
-            </div>
-        </div>
-    </footer>
-
-    <!-- JAVASCRIPT: Otomatik Domain Algılama, 5 Dil Döngüsü ve Kopyalama İşlevleri -->
-    <script>
-        // 5 Dilde Başlık ve Alt Metin Verileri
-        const translations = [
-            {
-                lang: "Türkçe",
-                title: "Web sitemiz şu anda bakımdadır.",
-                sub: "En kısa sürede yenilenmiş yüzümüzle tekrar hizmetinizdeyiz!"
-            },
-            {
-                lang: "English",
-                title: "Our website is currently under maintenance.",
-                sub: "We will be back shortly! Feel free to contact us via phone, WhatsApp or email."
-            },
-            {
-                lang: "Русский",
-                title: "Наш сайт сейчас находится на техническом обслуживании.",
-                sub: "Скоро мы снова будем с вами! Свяжитесь с нами по телефону или WhatsApp."
-            },
-            {
-                lang: "Deutsch",
-                title: "Unsere Website wird derzeit gewartet.",
-                sub: "Wir sind in Kürze wieder für Sie da! Kontaktieren Sie uns gerne direkt."
-            },
-            {
-                lang: "日本語",
-                title: "現在、ウェブサイトのメンテナンスを行っております。",
-                sub: "まもなく再開いたしますので、今しばらくお待ちください。"
-            }
-        ];
-
-        let currentLangIndex = 0;
-        let cycleInterval = null;
-        let isSharpBg = false;
-
-        // Domain Adresini Otomatik Algıla (Eğer yerel dosyada veya önizlemede açılırsa varsayılan domaini gösterir)
-        function initDomainDisplay() {
-            const domainEl = document.getElementById('domainDisplay');
-            const host = window.location.hostname;
-            
-            // Gerçek bir domainde yayındaysa doğrudan bağlanan domaini göster
-            if (host && host !== 'localhost' && host !== '127.0.0.1' && !host.includes('usercontent.goog') && !host.includes('scf.usercontent')) {
-                domainEl.textContent = host.startsWith('www.') ? host : host;
-            } else {
-                // Önizleme veya yerel dosya açılışında gösterilecek domain
-                domainEl.textContent = 'www.tuscorentalservice.com';
-            }
-
-            document.getElementById('currentYear').textContent = new Date().getFullYear();
+    async function loadExternalDilHtml() {
+      try {
+        const res = await fetch('dil.html');
+        if (res.ok) {
+          const text = await res.text();
+          const match = text.match(/<script[^>]*>([\s\S]*?)<\/script>/i);
+          if (match && match[1]) {
+            const fn = new Function(match[1]);
+            fn();
+            if (window.applyLanguageTexts) window.applyLanguageTexts();
+          }
         }
+      } catch (e) {}
+    }
+    loadExternalDilHtml();
+  </script>
 
-        // Seçili Dili Üst Vurgu Alanında Göster
-        function highlightLang(index) {
-            currentLangIndex = index;
-            const item = translations[index];
+  <!-- Firebase & Homepage Logic -->
+  <script type="module">
+    import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
-            const titleEl = document.getElementById('spotlightTitle');
-            const subEl = document.getElementById('spotlightSub');
+    const TUSCO_FIREBASE_CONFIG = {
+      apiKey: "AIzaSyAypFOmmrxzA-V7tzeS_G6T-I8d86VytiQ",
+      authDomain: "tuscorentalservice-b76a7.firebaseapp.com",
+      databaseURL: "https://tuscorentalservice-b76a7-default-rtdb.firebaseio.com",
+      projectId: "tuscorentalservice-b76a7",
+      storageBucket: "tuscorentalservice-b76a7.firebasestorage.app",
+      messagingSenderId: "637872767163",
+      appId: "1:637872767163:web:5130c8096c99ff0a2b699e"
+    };
 
-            titleEl.textContent = item.title;
-            subEl.textContent = item.sub;
+    const SEED_VEHICLES = [
+      { id: "v1", cat: "bike", name: "Dalyan Şehir & Tur Bisikleti", price: 350, speed: "Pedal Gücü", range: "Sınırsız", img: "https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&w=800&q=80", desc: "Konforlu sele ve geniş sepetiyle Sülüngür Gölü ve kanal boyu gezileri için ideal." },
+      { id: "v2", cat: "bike", name: "RockHopper 29\" Dağ Bisikleti", price: 450, speed: "Max 35 km/s", range: "Sınırsız", img: "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?auto=format&fit=crop&w=800&q=80", desc: "Hidrolik disk frenli ve ön amortisörlü profesyonel dağ bisikleti." },
+      { id: "v3", cat: "bike", name: "Karbon Maşa Gravel Yol Bisikleti", price: 550, speed: "Yüksek Hız", range: "Sınırsız", img: "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?auto=format&fit=crop&w=800&q=80", desc: "İztuzu asfaltında hızlı, Kaunos stabilize yollarında konforlu." },
+      { id: "v4", cat: "bike", name: "Çift Kişilik Tandem Bisiklet", price: 600, speed: "Keyif Sürüşü", range: "Sınırsız", img: "https://images.unsplash.com/photo-1529422643029-d4585747aaf2?auto=format&fit=crop&w=800&q=80", desc: "Eşiniz veya arkadaşınızla birlikte eşzamanlı pedal çevirme keyfi." },
+      { id: "v5", cat: "bike", name: "Retro Vintage Sepetli Cruiser", price: 400, speed: "Rahat Tempo", range: "Sınırsız", img: "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?auto=format&fit=crop&w=800&q=80", desc: "Hasır sepeti ve yaylı deri selesiyle Dalyan sokaklarının en şık bisikleti." },
+      { id: "v6", cat: "sup", name: "AquaMarina All-Around SUP", price: 500, speed: "Kürek Hızı", range: "Sakin Kanal", img: "https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=800&q=80", desc: "Dalyan sazlıkları arasında sessizce süzülmek için dengeli paddle board." },
+      { id: "v7", cat: "sup", name: "Touring Pro Uzun Mesafe SUP", price: 650, speed: "Hızlı Kayış", range: "Göl & Koy", img: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80", desc: "Sivri burun yapısıyla Sülüngür Gölü'nde uzun mesafe turları için." },
+      { id: "v8", cat: "sup", name: "Family Çift Kişilik Mega SUP", price: 800, speed: "2 Kişilik", range: "Durgun Su", img: "https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&w=800&q=80", desc: "220 kg taşıma kapasiteli, iki yetişkinin rahatça binebileceği dev SUP." },
+      { id: "v9", cat: "sup", name: "Yoga & Denge Özel SUP", price: 600, speed: "Yüksek Denge", range: "Göl & Nehir", img: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?auto=format&fit=crop&w=800&q=80", desc: "Kaya mezarları karşısında su üstü yoga ve meditasyon için ekstra geniş yüzey." },
+      { id: "v10", cat: "atv", name: "Kymco 150cc Otomatik Quad", price: 1100, speed: "Max 55 km/s", range: "120 km Depo", img: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=800&q=80", desc: "Kolay otomatik vitesli, köy ve orman patikaları için ideal başlangıç ATV'si." },
+      { id: "v11", cat: "atv", name: "CFMoto 450cc 4x4 Safari ATV", price: 1600, speed: "Max 75 km/s", range: "180 km Depo", img: "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=800&q=80", desc: "Radar Tepesi tırmanışı için seçilebilir 4 çeker ve diferansiyel kilitli canavar." },
+      { id: "v12", cat: "atv", name: "Linhai 300cc 2 Kişilik Konfor Quad", price: 1350, speed: "Max 65 km/s", range: "150 km Depo", img: "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=800&q=80", desc: "Arka yolcu sırt dayaması ve geniş selesiyle iki kişilik konforlu safari." },
+      { id: "v13", cat: "atv", name: "Polaris Sportsman 570 EPS", price: 1900, speed: "Max 80 km/s", range: "200 km Depo", img: "https://images.unsplash.com/photo-1609630875171-b1321377ee65?auto=format&fit=crop&w=800&q=80", desc: "Elektronik hidrolik direksiyon (EPS) ile en zorlu arazide bile yumuşak sürüş." },
+      { id: "v14", cat: "atv", name: "TGB Blade 600cc Ağır Arazi ATV", price: 2100, speed: "Max 85 km/s", range: "170 km Depo", img: "https://images.unsplash.com/photo-1541348263662-e0c8de4259ba?auto=format&fit=crop&w=800&q=80", desc: "V-Twin motor gücü ve LED projektörleriyle üst düzey adrenalin arayanlara." },
+      { id: "v15", cat: "utv", name: "Can-Am Commander 2 Kişilik UTV", price: 2700, speed: "Max 70 km/s", range: "240 km Depo", img: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=800&q=80", desc: "Tam çelik güvenlik kafesi ve 4 noktalı emniyet kemeriyle güvenli dağ safarisi." },
+      { id: "v16", cat: "utv", name: "Polaris RZR 4 Kişilik Aile UTV", price: 3600, speed: "Max 65 km/s", range: "220 km Depo", img: "https://images.unsplash.com/photo-1551524559-8af4e6624178?auto=format&fit=crop&w=800&q=80", desc: "4 yetişkin kapasiteli, ailenizle birlikte Aşı Koyu ve Radar Tepesi'ni keşfedin." },
+      { id: "v17", cat: "utv", name: "Yamaha Wolverine X2 850cc", price: 3100, speed: "Max 75 km/s", range: "250 km Depo", img: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80", desc: "Sessiz çift silindirli motoru ve geniş bagaj kasasıyla doğa dostu safari UTV'si." },
+      { id: "v18", cat: "utv", name: "CFMoto ZForce 1000 Sport", price: 3900, speed: "Max 90 km/s", range: "200 km Depo", img: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80", desc: "1000cc V-Twin motor, yarış koltukları ve Bluetooth ses sistemi." },
+      { id: "v19", cat: "ebike", name: "Dalyan Eco Kalın Teker Fat E-Bike", price: 700, speed: "Max 35 km/s", range: "65 km Menzil", img: "https://images.unsplash.com/photo-1571068316344-75bc76f77890?auto=format&fit=crop&w=800&q=80", desc: "4.0 inç kalın lastikleriyle kumda, çakılda ve İztuzu yokuşlarında yorulmadan sürüş." },
+      { id: "v20", cat: "ebike", name: "Katlanır Kompakt Şehir E-Bike", price: 550, speed: "Max 25 km/s", range: "45 km Menzil", img: "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?auto=format&fit=crop&w=800&q=80", desc: "10 saniyede katlanır, nehir teknelerine kolayca sığar." },
+      { id: "v21", cat: "ebike", name: "Bosch Motorlu Uzun Menzil E-Bike", price: 750, speed: "Max 25 km/s", range: "90 km Menzil", img: "https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&w=800&q=80", desc: "90 km menziliyle Köyceğiz Gölü ve Sultaniye Kaplıcaları'na tek şarjla gidin." },
+      { id: "v22", cat: "ebike", name: "Retro Chopper Elektrikli Cruiser", price: 850, speed: "Max 32 km/s", range: "55 km Menzil", img: "https://images.unsplash.com/photo-1558980664-3a031cf67ea8?auto=format&fit=crop&w=800&q=80", desc: "Yüksek gidonu ve motosiklet farıyla göz alıcı retro elektrikli sürüş." },
+      { id: "v23", cat: "ebike", name: "Çift Bataryalı Dağ E-MTB", price: 900, speed: "Max 35 km/s", range: "110 km Menzil", img: "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?auto=format&fit=crop&w=800&q=80", desc: "Çift batarya ve tam süspansiyon ile en dik zirvelere terlemeden çıkın." },
+      { id: "v24", cat: "tripod", name: "Tripod Trike 3 Tekerli E-Scooter", price: 800, speed: "Max 25 km/s", range: "50 km Menzil", img: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=800&q=80", desc: "Denge gerektirmez! Geniş arka sepeti ve diferansiyelli aksıyla tam güvenlik." },
+      { id: "v25", cat: "tripod", name: "2 Kişilik Kapalı Kabinli E-Trike", price: 1200, speed: "Max 35 km/s", range: "65 km Menzil", img: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=800&q=80", desc: "Güneş ve yağmur tavanı, geri görüş kamerası ve iki kişilik koltuk." },
+      { id: "v26", cat: "tripod", name: "CityTrike Koltuklu Bagajlı Tripod", price: 850, speed: "Max 25 km/s", range: "55 km Menzil", img: "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=800&q=80", desc: "Kolçaklı kaptan koltuğu ve kilitli arka bagajıyla konforlu şehir içi ulaşım." },
+      { id: "v27", cat: "tripod", name: "Tenteli Gezi Tuk-Tuk E-Tripod", price: 1300, speed: "Max 30 km/s", range: "60 km Menzil", img: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=800&q=80", desc: "Üstü tenteli, arkada iki kişilik geniş koltuklu tatil gezi aracı." },
+      { id: "v28", cat: "disabled", name: "Ortopedik Kaptan Koltuklu Engelli Scooter", price: 750, speed: "12 km/s Güvenli", range: "40 km Menzil", img: "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80", desc: "360 derece dönebilen koltuk ve otomatik elektromanyetik fren sistemi." },
+      { id: "v29", cat: "disabled", name: "Büyük Tekerli Arazi Mobilite Aracı", price: 950, speed: "15 km/s Güvenli", range: "50 km Menzil", img: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=800&q=80", desc: "Havalı büyük tekerlekleri sayesinde parke ve toprak yollarda sarsıntısız sürüş." },
+      { id: "v30", cat: "disabled", name: "Katlanır Lityum Akülü Tekerlekli Sandalye", price: 650, speed: "8 km/s Güvenli", range: "30 km Menzil", img: "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80", desc: "360 derece hassas joystick kontrollü, araç bagajına sığabilen hafif tasarım." }
+    ];
 
-            // Kartların aktif çerçevesini güncelle
-            for (let i = 0; i < 5; i++) {
-                const card = document.getElementById('lang-card-' + i);
-                if (i === index) {
-                    card.classList.add('active-lang');
-                } else {
-                    card.classList.remove('active-lang');
-                }
-            }
+    let appState = {
+      vehicles: [],
+      routes: [],
+      settings: { whatsappPhone: '905395430777' },
+      texts: {}
+    };
+
+    let activeCategory = 'all';
+    let searchQuery = '';
+    let currentLang = 'tr';
+
+    function getDict() {
+      const all = window.TUSCO_TRANSLATIONS || FALLBACK_TRANSLATIONS;
+      return all[currentLang] || all.tr;
+    }
+
+    function detectUserLanguage() {
+      const saved = localStorage.getItem('tusco_lang');
+      const all = window.TUSCO_TRANSLATIONS || FALLBACK_TRANSLATIONS;
+      if (saved && all[saved]) {
+        return saved;
+      }
+      const navLang = (navigator.languages && navigator.languages[0]) || navigator.language || 'tr';
+      const code = navLang.substring(0, 2).toLowerCase();
+      if (all[code]) {
+        return code;
+      }
+      return 'tr';
+    }
+
+    window.changeLanguage = function(lang) {
+      const all = window.TUSCO_TRANSLATIONS || FALLBACK_TRANSLATIONS;
+      if (!all[lang]) return;
+      currentLang = lang;
+      localStorage.setItem('tusco_lang', lang);
+      document.documentElement.lang = lang;
+      const sel = document.getElementById('langSelector');
+      if (sel) sel.value = lang;
+
+      window.applyLanguageTexts();
+      renderVehicles();
+    };
+
+    window.applyLanguageTexts = function() {
+      const dict = getDict();
+      const t = appState.texts || {};
+      const isTr = currentLang === 'tr';
+
+      document.getElementById('heroBadge').innerText = (isTr && t.heroBadge) ? t.heroBadge : dict.heroBadge;
+      document.getElementById('heroTitle').innerText = (isTr && t.heroTitle) ? t.heroTitle : dict.heroTitle;
+      document.getElementById('heroSub').innerText = (isTr && t.heroSub) ? t.heroSub : dict.heroSub;
+      document.getElementById('perk1').innerText = (isTr && t.perk1) ? t.perk1 : dict.perk1;
+      document.getElementById('perk2').innerText = (isTr && t.perk2) ? t.perk2 : dict.perk2;
+      document.getElementById('perk3').innerText = (isTr && t.perk3) ? t.perk3 : dict.perk3;
+
+      document.getElementById('catalogTitle').innerText = dict.catalogTitle;
+      document.getElementById('catalogSub').innerText = dict.catalogSub;
+      document.getElementById('routesTitle').innerText = dict.routesTitle;
+      document.getElementById('routesSub').innerText = dict.routesSub;
+      document.getElementById('searchInput').placeholder = dict.searchPh;
+      document.getElementById('btnAdminText').innerText = dict.adminBtn;
+      document.getElementById('waPillText').innerText = dict.waPill;
+
+      const rBtnText = dict.routesBtn || "🗺️ 30 Gezi Rotası";
+      const navRBtn = document.getElementById('btnRoutesNav');
+      if (navRBtn) navRBtn.innerText = rBtnText;
+      const expRBtn = document.getElementById('btnExploreRoutes');
+      if (expRBtn) expRBtn.innerText = rBtnText + " →";
+
+      const catDict = dict.cats || {};
+      document.querySelectorAll('#categoryTabs .tab-btn').forEach(btn => {
+        const cat = btn.getAttribute('data-cat');
+        if (catDict[cat]) {
+          btn.innerText = catDict[cat];
         }
+      });
+    };
 
-        // Arka plandaki Dalyan resminin bulanıklığını değiştirme (isteğe bağlı önizleme butonu)
-        function toggleBackgroundClarity() {
-            const bg = document.getElementById('bgLayer');
-            const btnText = document.getElementById('blurBtnText');
-            isSharpBg = !isSharpBg;
+    function normalizeCat(rawCat) {
+      if (!rawCat) return 'bike';
+      const c = rawCat.toLowerCase();
+      if (c === 'bisiklet' || c === 'bike') return 'bike';
+      if (c === 'paddleboard' || c === 'sup') return 'sup';
+      if (c === 'atv-quad' || c === 'atv') return 'atv';
+      if (c === 'engelli' || c === 'disabled') return 'disabled';
+      return c;
+    }
 
-            if (isSharpBg) {
-                bg.style.filter = 'blur(0.5px) brightness(0.88) saturate(1.2)';
-                btnText.textContent = 'Hafif Blur Yap';
-            } else {
-                bg.style.filter = 'blur(3.5px) brightness(0.82) saturate(1.18)';
-                btnText.textContent = 'Dalyan Manzarası';
-            }
+    window.setCategory = function(cat, btn) {
+      activeCategory = cat;
+      document.querySelectorAll('#categoryTabs .tab-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderVehicles();
+    };
+
+    window.filterVehicles = function(q) {
+      searchQuery = (q || '').toLowerCase();
+      renderVehicles();
+    };
+
+    function renderVehicles() {
+      const grid = document.getElementById('vehiclesGrid');
+      if (!grid) return;
+      const dict = getDict();
+      const catDict = dict.cats || {};
+
+      const filtered = appState.vehicles.filter(v => {
+        const vCat = normalizeCat(v.cat || v.category);
+        const matchesCat = activeCategory === 'all' || vCat === activeCategory;
+        const vName = (v.name || v.title || '').toLowerCase();
+        const vDesc = (v.desc || '').toLowerCase();
+        const matchesQuery = vName.includes(searchQuery) || vDesc.includes(searchQuery);
+        return matchesCat && matchesQuery;
+      });
+
+      grid.innerHTML = filtered.map(v => {
+        const vName = v[`name_${currentLang}`] || v.name || v.title || 'TUSCO Araç';
+        const vDesc = v[`desc_${currentLang}`] || v.desc || '';
+        const vImg = v.img || v.image || 'https://placehold.co/600x400/272019/f5d547?text=TUSCO';
+        const rawCat = normalizeCat(v.cat || v.category);
+        const catBadge = catDict[rawCat] || rawCat.toUpperCase();
+
+        const vid = esc(v.id);
+        const open = `event.preventDefault();event.stopPropagation();window.openVehicle('${vid}')`;
+        return `
+          <article class="card" onclick="window.openVehicle('${vid}')" style="cursor: pointer;">
+            <div class="card-image-box">
+              <img src="${esc(vImg)}" class="card-img" alt="${esc(vName)} - ${esc(catBadge)} - Dalyan" loading="lazy" decoding="async" width="800" height="600" onerror="this.src='https://placehold.co/600x400/272019/f5d547?text=TUSCO'">
+              <span class="card-tag">${esc(catBadge)}</span>
+              <span class="card-price">${esc(v.price)} ₺ ${esc(dict.perDay)}</span>
+            </div>
+            <div class="card-body">
+              <h3 class="card-title"><a href="${vPath(v)}" onclick="${open}">${esc(vName)}</a></h3>
+              <p class="card-desc">${esc(vDesc)}</p>
+            </div>
+            <div class="card-footer">
+              <a href="${vPath(v)}" class="btn btn-primary" style="width: 100%; font-size: 0.8rem;" onclick="${open}">${esc(dict.bookNow)}</a>
+            </div>
+          </article>
+        `;
+      }).join('');
+      syncOpenVehicle();
+    }
+
+    window.openWhatsAppChat = function(custom) {
+      const phone = (appState.settings.whatsappPhone || appState.settings.bizPhone || '905395430777').replace(/[^0-9]/g, '');
+      const dict = getDict();
+      const msg = encodeURIComponent((typeof custom === "string" && custom) ? custom : (dict.waGreeting || "Merhaba TUSCO Rental Service, araç kiralamak istiyorum."));
+      window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
+    };
+
+
+    /* =====================================================================
+       SEO + SAYFA İÇİ ARAÇ DETAYI 
+       URL şeması:  index.html?arac=<araç-adı>-<id>   (örn. ?arac=dalyan-sehir-tur-bisikleti-v1)
+       ===================================================================== */
+    const PLACEHOLDER = 'https://placehold.co/800x600/272019/f5d547?text=TUSCO';
+    const $ = (id) => document.getElementById(id);
+    const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const fill = (t, o) => t.replace(/\{(\w+)\}/g, (_, k) => o[k] ?? '');
+    const TR_MAP = { 'ç':'c','ğ':'g','ı':'i','ö':'o','ş':'s','ü':'u','Ç':'c','Ğ':'g','İ':'i','I':'i','Ö':'o','Ş':'s','Ü':'u' };
+    const slugify = (s) => String(s ?? '').replace(/[çğıöşüÇĞİIÖŞÜ]/g, c => TR_MAP[c]).toLowerCase().replace(/&/g, ' ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    const vSlug = (v) => slugify(v.name || v.title) + '-' + slugify(v.id);
+    const SITE_BASE = () => location.origin + location.pathname.replace(/index\.html$/, '');
+    const vPath = (v) => '?arac=' + vSlug(v);
+    const vAbs = (v) => SITE_BASE() + vPath(v);
+
+    const DETAIL_I18N = {
+      tr: { home:'Ana Sayfa', back:'← Tüm Araçlara Dön', specs:'Teknik Özellikler & Performans', speed:'Maksimum Hız', range:'Menzil / Yakıt', drive:'Sürüş Tipi', cap:'Kapasite',
+        dSpeed:'Standart', dRange:'Sınırsız', dDrive:'Otomatik', dCap:'1-2 Kişilik', routesH:'Bu Araçla Gidilebilecek 3 Popüler Rota', opt:'SEÇENEK',
+        bookTitle:'Hızlı Rezervasyon', bookSub:'Ön ödeme yapmadan anında yerinizi ayırtın.', fName:'Adınız ve Soyadınız *', fNameP:'Ahmet Yılmaz', fEmail:'E-Posta Adresi *', fPhone:'Telefon / WhatsApp *',
+        fHotel:"Dalyan'da Kalınacak Otel / Pansiyon *", fHotelP:'Otel adı veya villa', fStart:'Alış Tarihi *', fEnd:'İade Tarihi *', total:'Toplam Tutar:', submit:'Rezervasyonu Tamamla',
+        ok:'Rezervasyon başarılı! Kodunuz:', err:'Kayıt sırasında bir hata oluştu. Lütfen WhatsApp ile bize ulaşın.', wa:'💬 WhatsApp ile Sor', waMsg:'Merhaba, {n} kiralamak istiyorum.',
+        related:'Aynı Kategoriden Diğer Araçlar', title:'{n} Kiralama Dalyan | ₺{p}/gün | TUSCO Rental Service',
+        meta:"{n} Dalyan'da günlük ₺{p} ile kiralık. {d} Otele ücretsiz teslimat, kask ve kilit dahil.",
+        routes:[ ['🏛️ Kaunos Antik Kenti','4.5 km','Dalyan kanalını sandalla geçip Kaunos kalıntılarını ve kaya mezarlarını keşfedin.'],
+                 ['🐢 İztuzu Plajı','11.8 km','Çam ormanları arasından Caretta caretta koruma alanına ulaşın.'],
+                 ['🌅 Sülüngür Gölü','6.2 km','Göl kenarındaki düz yolda sürün, gün batımında ahşap iskelede mola verin.'] ] },
+      en: { home:'Home', back:'← Back to all vehicles', specs:'Specifications & Performance', speed:'Top Speed', range:'Range / Fuel', drive:'Drive Type', cap:'Capacity',
+        dSpeed:'Standard', dRange:'Unlimited', dDrive:'Automatic', dCap:'1-2 people', routesH:'3 Popular Routes for This Vehicle', opt:'OPTION',
+        bookTitle:'Quick Booking', bookSub:'Reserve instantly with no upfront payment.', fName:'Full name *', fNameP:'John Smith', fEmail:'Email address *', fPhone:'Phone / WhatsApp *',
+        fHotel:'Your hotel / guesthouse in Dalyan *', fHotelP:'Hotel or villa name', fStart:'Pick-up date *', fEnd:'Return date *', total:'Total:', submit:'Complete Booking',
+        ok:'Booking confirmed! Your code:', err:'Something went wrong while saving. Please contact us on WhatsApp.', wa:'💬 Ask on WhatsApp', waMsg:'Hello, I would like to rent {n}.',
+        related:'More Vehicles in This Category', title:'{n} Rental in Dalyan | ₺{p}/day | TUSCO Rental Service',
+        meta:'Rent {n} in Dalyan from ₺{p} per day. {d} Free hotel delivery, helmet and lock included.',
+        routes:[ ['🏛️ Kaunos Ancient City','4.5 km','Cross the Dalyan canal by boat and explore the Kaunos ruins and rock-cut tombs.'],
+                 ['🐢 İztuzu Beach','11.8 km','Ride through pine forests to the Caretta caretta turtle sanctuary.'],
+                 ['🌅 Lake Sülüngür','6.2 km','Ride the flat lakeside road and stop at the wooden piers for sunset.'] ] },
+      ru: { home:'Главная', back:'← Ко всем моделям', specs:'Характеристики', speed:'Макс. скорость', range:'Запас хода / топливо', drive:'Тип привода', cap:'Вместимость',
+        dSpeed:'Стандарт', dRange:'Без ограничений', dDrive:'Автомат', dCap:'1-2 человека', routesH:'3 популярных маршрута для этого транспорта', opt:'ВАРИАНТ',
+        bookTitle:'Быстрое бронирование', bookSub:'Забронируйте сразу, без предоплаты.', fName:'Имя и фамилия *', fNameP:'Иван Иванов', fEmail:'Эл. почта *', fPhone:'Телефон / WhatsApp *',
+        fHotel:'Отель / пансион в Дальяне *', fHotelP:'Название отеля или виллы', fStart:'Дата получения *', fEnd:'Дата возврата *', total:'Итого:', submit:'Завершить бронирование',
+        ok:'Бронирование принято! Ваш код:', err:'Ошибка при сохранении. Пожалуйста, напишите нам в WhatsApp.', wa:'💬 Спросить в WhatsApp', waMsg:'Здравствуйте, я хочу арендовать {n}.',
+        related:'Другие модели этой категории', title:'Аренда {n} в Дальяне | ₺{p}/день | TUSCO Rental Service',
+        meta:'Аренда {n} в Дальяне от ₺{p} в день. {d} Бесплатная доставка в отель, шлем и замок включены.',
+        routes:[ ['🏛️ Древний город Каунос','4.5 км','Пересеките канал Дальян на лодке и осмотрите руины Каунос и скальные гробницы.'],
+                 ['🐢 Пляж Изтузу','11.8 км','Путь через сосновые леса к заповеднику черепах каретта.'],
+                 ['🌅 Озеро Сюлюнгюр','6.2 км','Ровная дорога вдоль озера и закат на деревянных причалах.'] ] },
+      de: { home:'Startseite', back:'← Zurück zu allen Fahrzeugen', specs:'Technische Daten & Leistung', speed:'Höchstgeschwindigkeit', range:'Reichweite / Kraftstoff', drive:'Antrieb', cap:'Kapazität',
+        dSpeed:'Standard', dRange:'Unbegrenzt', dDrive:'Automatik', dCap:'1-2 Personen', routesH:'3 beliebte Routen für dieses Fahrzeug', opt:'OPTION',
+        bookTitle:'Schnellbuchung', bookSub:'Sofort reservieren, ohne Vorauszahlung.', fName:'Vor- und Nachname *', fNameP:'Max Mustermann', fEmail:'E-Mail-Adresse *', fPhone:'Telefon / WhatsApp *',
+        fHotel:'Hotel / Pension in Dalyan *', fHotelP:'Name des Hotels oder der Villa', fStart:'Abholdatum *', fEnd:'Rückgabedatum *', total:'Gesamtbetrag:', submit:'Buchung abschließen',
+        ok:'Buchung erfolgreich! Ihr Code:', err:'Beim Speichern ist ein Fehler aufgetreten. Bitte kontaktieren Sie uns per WhatsApp.', wa:'💬 Per WhatsApp fragen', waMsg:'Hallo, ich möchte {n} mieten.',
+        related:'Weitere Fahrzeuge dieser Kategorie', title:'{n} mieten in Dalyan | ₺{p}/Tag | TUSCO Rental Service',
+        meta:'{n} in Dalyan mieten ab ₺{p} pro Tag. {d} Kostenlose Hotellieferung, Helm und Schloss inklusive.',
+        routes:[ ['🏛️ Antikes Kaunos','4,5 km','Überqueren Sie den Dalyan-Kanal per Boot und entdecken Sie die Ruinen und Felsengräber von Kaunos.'],
+                 ['🐢 İztuzu-Strand','11,8 km','Fahren Sie durch Pinienwälder zum Schutzgebiet der Caretta-Schildkröten.'],
+                 ['🌅 Sülüngür-See','6,2 km','Flache Uferstraße mit Sonnenuntergang an den Holzstegen.'] ] },
+      ja: { home:'ホーム', back:'← 車両一覧へ戻る', specs:'スペック・性能', speed:'最高速度', range:'航続距離 / 燃料', drive:'駆動方式', cap:'乗車定員',
+        dSpeed:'標準', dRange:'無制限', dDrive:'オートマ', dCap:'1〜2名', routesH:'この車両で行ける人気ルート3選', opt:'ルート',
+        bookTitle:'かんたん予約', bookSub:'前払い不要で今すぐ予約できます。', fName:'お名前 *', fNameP:'山田 太郎', fEmail:'メールアドレス *', fPhone:'電話 / WhatsApp *',
+        fHotel:'ダルヤンの宿泊先 *', fHotelP:'ホテル名またはヴィラ名', fStart:'受取日 *', fEnd:'返却日 *', total:'合計：', submit:'予約を確定する',
+        ok:'ご予約を承りました。予約コード：', err:'保存中にエラーが発生しました。WhatsAppでご連絡ください。', wa:'💬 WhatsAppで質問', waMsg:'こんにちは、{n}をレンタルしたいです。',
+        related:'同じカテゴリの他の車両', title:'ダルヤンで{n}をレンタル | ₺{p}/日 | TUSCO Rental Service',
+        meta:'ダルヤンで{n}を1日₺{p}からレンタル。{d} ホテルへの無料配車、ヘルメット・ロック付き。',
+        routes:[ ['🏛️ カウノス古代遺跡','4.5 km','ダルヤン運河を船で渡り、カウノス遺跡と岩窟墓を探検。'],
+                 ['🐢 イズトゥズビーチ','11.8 km','松林を抜けてウミガメの保護区へ。'],
+                 ['🌅 スリュングュル湖','6.2 km','湖畔の平坦な道を走り、木製の桟橋で夕日を。'] ] }
+    };
+    const dd = () => DETAIL_I18N[currentLang] || DETAIL_I18N.tr;
+    const vText = (v) => ({ name: v['name_' + currentLang] || v.name || v.title || 'TUSCO', desc: v['desc_' + currentLang] || v.desc || '' });
+    const jsonLd = (o) => JSON.stringify(o).replace(/</g, '\\u003c');
+
+    /* ---------- SEO meta yönetimi ---------- */
+    const BASE_SEO = {
+      title: document.title,
+      desc: $('metaDesc').content,
+      ogTitle: $('ogTitle').content, ogDesc: $('ogDesc').content,
+      img: $('ogImage').content, twTitle: $('twTitle').content, twDesc: $('twDesc').content
+    };
+    function setMeta(id, val) {
+      const el = $(id); if (!el) return;
+      el.setAttribute(el.tagName === 'LINK' ? 'href' : 'content', val);
+    }
+    function resetSeo() {
+      document.title = BASE_SEO.title;
+      setMeta('metaDesc', BASE_SEO.desc); setMeta('seoCanonical', SITE_BASE());
+      setMeta('ogType', 'website'); setMeta('ogTitle', BASE_SEO.ogTitle); setMeta('ogDesc', BASE_SEO.ogDesc);
+      setMeta('ogUrl', SITE_BASE()); setMeta('ogImage', BASE_SEO.img);
+      setMeta('twTitle', BASE_SEO.twTitle); setMeta('twDesc', BASE_SEO.twDesc); setMeta('twImage', BASE_SEO.img);
+      $('ldProduct').textContent = '';
+    }
+    function applySeo(v) {
+      const d = dd(), t = vText(v);
+      const catKey = normalizeCat(v.cat || v.category);
+      const cat = (getDict().cats || {})[catKey] || catKey;
+      const title = fill(d.title, { n: t.name, p: v.price });
+      let desc = fill(d.meta, { n: t.name, p: v.price, d: t.desc }).replace(/\s+/g, ' ').trim();
+      if (desc.length > 158) desc = desc.slice(0, 155).trim() + '…';
+      const url = vAbs(v), img = v.img || v.image || BASE_SEO.img;
+      document.title = title;
+      setMeta('metaDesc', desc); setMeta('seoCanonical', url);
+      setMeta('ogType', 'product'); setMeta('ogTitle', title); setMeta('ogDesc', desc); setMeta('ogUrl', url); setMeta('ogImage', img);
+      setMeta('twTitle', title); setMeta('twDesc', desc); setMeta('twImage', img);
+      $('ldProduct').textContent = jsonLd({
+        '@context': 'https://schema.org',
+        '@graph': [
+          { '@type': 'Product', '@id': url + '#product', name: t.name, description: t.desc, image: [img], sku: String(v.id), category: cat,
+            brand: { '@type': 'Brand', name: 'TUSCO Rental Service' },
+            offers: { '@type': 'Offer', url, priceCurrency: 'TRY', price: String(v.price), availability: 'https://schema.org/InStock',
+                      seller: { '@type': 'Organization', name: 'TUSCO Rental Service' } } },
+          { '@type': 'BreadcrumbList', itemListElement: [
+            { '@type': 'ListItem', position: 1, name: d.home, item: SITE_BASE() },
+            { '@type': 'ListItem', position: 2, name: t.name, item: url } ] }
+        ]
+      });
+    }
+    let listSig = '';
+    function updateListLd() {
+      const sig = appState.vehicles.map(v => v.id + '|' + (v.name || v.title)).join(';');
+      if (sig === listSig) return; listSig = sig;
+      $('ldList').textContent = jsonLd({
+        '@context': 'https://schema.org', '@type': 'ItemList', name: 'TUSCO Rental Service - Dalyan',
+        itemListElement: appState.vehicles.map((v, i) => ({ '@type': 'ListItem', position: i + 1, url: vAbs(v), name: v.name || v.title }))
+      });
+    }
+
+    /* ---------- Panel içeriği ---------- */
+    let openId = null, openSig = '', lastFocus = null, homeOrigin = false, urlHandled = false;
+    const findVeh = (id) => appState.vehicles.find(x => String(x.id) === String(id));
+
+    function renderVehiclePanel(v) {
+      const d = dd(), dict = getDict(), t = vText(v);
+      const catKey = normalizeCat(v.cat || v.category);
+      const cat = (dict.cats || {})[catKey] || catKey.toUpperCase();
+      const img = v.img || v.image || PLACEHOLDER;
+      const today = new Date().toISOString().split('T')[0];
+      const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+      const price = Number(v.price) || 0;
+      const spec = (l, val) => `<div class="veh-spec"><b>${esc(l)}</b><span>${esc(val)}</span></div>`;
+      const related = appState.vehicles.filter(x => String(x.id) !== String(v.id) && normalizeCat(x.cat || x.category) === catKey).slice(0, 6);
+      openSig = [v.id, v.name, v['name_' + currentLang], v.price, v.desc, v['desc_' + currentLang], v.img, currentLang].join('|');
+      $('vehCloseTxt').textContent = d.back;
+
+      $('vehContent').innerHTML = `
+        <nav class="veh-crumbs" aria-label="breadcrumb">
+          <a href="./" onclick="event.preventDefault();window.closeVehicle()">${esc(d.home)}</a><span>›</span><span>${esc(cat)}</span><span>›</span><span aria-current="page">${esc(t.name)}</span>
+        </nav>
+        <div class="veh-grid">
+          <article class="veh-box">
+            <div class="veh-hero">
+              <img src="${esc(img)}" alt="${esc(t.name)} - ${esc(cat)} - Dalyan" width="1200" height="800" onerror="this.src='${PLACEHOLDER}'">
+              <span class="card-tag" style="top:1.25rem; left:1.25rem; font-size:0.8rem;">${esc(cat)}</span>
+              <span class="card-price" style="bottom:1.25rem; right:1.25rem; font-size:1.1rem; padding:0.5rem 1.1rem;">₺${esc(v.price)} ${esc(dict.perDay)}</span>
+            </div>
+            <div class="veh-pad">
+              <h1 id="vehTitle" class="veh-h1">${esc(t.name)}</h1>
+              <p class="veh-lead">${esc(t.desc)}</p>
+              <div class="perks-bar" style="justify-content:flex-start; margin-top:1.25rem;">
+                <div class="perk-badge">🛡️ ${esc(dict.perk1)}</div>
+                <div class="perk-badge">🏨 ${esc(dict.perk2)}</div>
+                <div class="perk-badge">📞 ${esc(dict.perk3)}</div>
+              </div>
+              <h2 class="veh-h3">${esc(d.specs)}</h2>
+              <div class="veh-specs">
+                ${spec(d.speed, v.speed || d.dSpeed)}${spec(d.range, v.range || d.dRange)}${spec(d.drive, v.drive || d.dDrive)}${spec(d.cap, v.capacity || d.dCap)}
+              </div>
+              <h2 class="veh-h3">${esc(d.routesH)}</h2>
+              <div class="veh-routes">
+                ${d.routes.map((r, i) => `<div class="veh-route"><small>${esc(d.opt)} ${i + 1}</small><strong>${esc(r[0])}</strong><p>${esc(r[1])} • ${esc(r[2])}</p></div>`).join('')}
+              </div>
+              ${related.length ? `
+              <h2 class="veh-h3">${esc(d.related)}</h2>
+              <div class="veh-related">
+                ${related.map(x => `<a href="${vPath(x)}" onclick="event.preventDefault();window.openVehicle('${esc(x.id)}')">${esc(vText(x).name)}</a>`).join('')}
+              </div>` : ''}
+            </div>
+          </article>
+
+          <aside class="veh-side">
+            <div class="veh-box veh-pad">
+              <h2 style="font-size:1.35rem; font-weight:900; color:#fff; margin-bottom:0.25rem;">${esc(d.bookTitle)}</h2>
+              <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1.5rem;">${esc(d.bookSub)}</p>
+              <div id="bookBox">
+                <form onsubmit="return window.handleBooking(event, '${esc(v.id)}')">
+                  <div class="form-group"><label class="form-label" for="bName">${esc(d.fName)}</label><input type="text" id="bName" required class="form-input" placeholder="${esc(d.fNameP)}" autocomplete="name"></div>
+                  <div class="form-group"><label class="form-label" for="bEmail">${esc(d.fEmail)}</label><input type="email" id="bEmail" required class="form-input" placeholder="mail@example.com" autocomplete="email"></div>
+                  <div class="form-group"><label class="form-label" for="bPhone">${esc(d.fPhone)}</label><input type="tel" id="bPhone" required class="form-input" placeholder="+90 5XX XXX XX XX" autocomplete="tel"></div>
+                  <div class="form-group"><label class="form-label" for="bHotel">${esc(d.fHotel)}</label><input type="text" id="bHotel" required class="form-input" placeholder="${esc(d.fHotelP)}"></div>
+                  <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+                    <div class="form-group"><label class="form-label" for="bStart">${esc(d.fStart)}</label><input type="date" id="bStart" value="${today}" min="${today}" required class="form-input" onchange="window.calcTotal(${price})"></div>
+                    <div class="form-group"><label class="form-label" for="bEnd">${esc(d.fEnd)}</label><input type="date" id="bEnd" value="${tomorrow}" min="${today}" required class="form-input" onchange="window.calcTotal(${price})"></div>
+                  </div>
+                  <div class="veh-total">
+                    <span style="font-size:0.85rem; font-weight:700; color:var(--text-secondary);">${esc(d.total)}</span>
+                    <span id="totalPriceDisplay" style="font-size:1.35rem; font-weight:900; color:var(--brand-gold);">₺${price}</span>
+                  </div>
+                  <button type="submit" class="btn btn-primary" style="width:100%; padding:0.85rem; font-size:0.95rem;">${esc(d.submit)}</button>
+                </form>
+                <div id="bookErr"></div>
+              </div>
+              <button type="button" class="btn btn-outline" style="width:100%; margin-top:0.85rem;" onclick="window.waVehicle('${esc(v.id)}')">${esc(d.wa)}</button>
+            </div>
+          </aside>
+        </div>`;
+    }
+
+    function bookingDays() {
+      const s = new Date($('bStart').value), e = new Date($('bEnd').value);
+      let days = Math.ceil((e - s) / 86400000);
+      return (days <= 0 || isNaN(days)) ? 1 : days;
+    }
+    window.calcTotal = function (price) { $('totalPriceDisplay').textContent = '₺' + (bookingDays() * price); };
+
+    window.handleBooking = async function (e, id) {
+      e.preventDefault();
+      const v = findVeh(id); if (!v) return false;
+      const d = dd();
+      const booking = {
+        id: `TUSCO-${Math.floor(1000 + Math.random() * 9000)}`,
+        vehName: v.name || v.title,
+        name: $('bName').value, email: $('bEmail').value, phone: $('bPhone').value, hotel: $('bHotel').value,
+        start: $('bStart').value, end: $('bEnd').value,
+        total: bookingDays() * (Number(v.price) || 0),
+        createdAt: new Date().toISOString()
+      };
+      try {
+        await set(ref(getDatabase(getApp()), `tusco_data/bookings/${booking.id}`), booking);
+        $('bookBox').innerHTML = `<div class="veh-ok">✅ ${esc(d.ok)}<div style="font-size:1.5rem; color:var(--brand-gold); margin-top:0.4rem;">#${esc(booking.id)}</div></div>`;
+      } catch (err) {
+        $('bookErr').innerHTML = `<div class="veh-err">⚠️ ${esc(d.err)}</div>`;
+      }
+      return false;
+    };
+
+    window.waVehicle = function (id) {
+      const v = findVeh(id); if (!v) return;
+      window.openWhatsAppChat(fill(dd().waMsg, { n: vText(v).name }));
+    };
+
+    /* ---------- Aç / kapat / geçmiş (history) ---------- */
+    function setBackgroundInert(on) {
+      document.querySelectorAll('body > header, body > main, body > footer, .floating-whatsapp').forEach(el => { el.inert = on; });
+    }
+
+    window.openVehicle = function (id, opts) {
+      opts = opts || {};
+      const v = findVeh(id); if (!v) return false;
+      const wasOpen = openId !== null;
+      if (!wasOpen) lastFocus = document.activeElement;
+      if (opts.push !== false) {
+        if (!wasOpen) homeOrigin = true;
+        const d = wasOpen ? ((history.state && history.state.d) || 0) + 1 : 1;
+        history.pushState({ veh: String(v.id), d }, '', vPath(v));
+      }
+      openId = v.id;
+      renderVehiclePanel(v);
+      applySeo(v);
+      const ov = $('vehOverlay');
+      ov.style.display = 'block'; ov.scrollTop = 0;
+      document.body.style.overflow = 'hidden';
+      setBackgroundInert(true);
+      $('vehOverlay').focus({ preventScroll: true });
+      return false;
+    };
+
+    window.closeVehicle = function (opts) {
+      if (openId === null) return;
+      openId = null;
+      $('vehOverlay').style.display = 'none';
+      document.body.style.overflow = '';
+      setBackgroundInert(false);
+      resetSeo();
+      if (!(opts && opts.pop)) {
+        const st = history.state;
+        if (homeOrigin && st && st.d > 0) history.go(-st.d);
+        else history.replaceState(null, '', location.pathname);
+      }
+      if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+    };
+
+    function vehFromUrl() {
+      const p = new URLSearchParams(location.search);
+      const a = p.get('arac'), legacy = p.get('id');
+      if (a) {
+        const s = slugify(a);
+        return appState.vehicles.find(v => vSlug(v) === s) || appState.vehicles.find(v => s.endsWith('-' + slugify(v.id))) || null;
+      }
+      if (legacy) return findVeh(legacy);   // eski ?id=v1 bağlantıları
+      return null;
+    }
+
+    // renderVehicles() her çağrıldığında: JSON-LD listesi + açık paneli veri değişimine göre senkronla
+    function syncOpenVehicle() {
+      updateListLd();
+      if (openId !== null) {
+        const v = findVeh(openId);
+        if (!v) { window.closeVehicle({ pop: true }); history.replaceState(null, '', location.pathname); return; }
+        const sig = [v.id, v.name, v['name_' + currentLang], v.price, v.desc, v['desc_' + currentLang], v.img, currentLang].join('|');
+        if (sig !== openSig) { renderVehiclePanel(v); applySeo(v); }
+      } else if (!urlHandled && location.search) {
+        const v = vehFromUrl();
+        if (v) {
+          urlHandled = true; homeOrigin = false;
+          history.replaceState({ veh: String(v.id), d: 0 }, '', vPath(v));   // eski ?id= adresini kanonik adrese çevirir
+          window.openVehicle(v.id, { push: false });
         }
+      }
+    }
 
-        // Panoya Kopyalama Yardımcı Fonksiyonu
-        function copyTextToClipboard(text, callback) {
-            const tempInput = document.createElement('textarea');
-            tempInput.value = text;
-            document.body.appendChild(tempInput);
-            tempInput.select();
+    window.addEventListener('popstate', () => {
+      const v = vehFromUrl();
+      if (v) { homeOrigin = !!(history.state && history.state.d > 0); window.openVehicle(v.id, { push: false }); }
+      else window.closeVehicle({ pop: true });
+    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && openId !== null) window.closeVehicle(); });
+
+    setMeta('seoCanonical', SITE_BASE()); setMeta('ogUrl', SITE_BASE());
+
+    currentLang = detectUserLanguage();
+    document.documentElement.lang = currentLang;
+    document.getElementById('langSelector').value = currentLang;
+    window.applyLanguageTexts();
+
+    async function initFirebaseHome() {
+      const statusEl = document.getElementById('dbLoadingStatus');
+      try {
+        statusEl.innerText = "Firebase veritabanına bağlanılıyor...";
+        const app = getApps().length === 0 ? initializeApp(TUSCO_FIREBASE_CONFIG) : getApp();
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const rtdb = getDatabase(app);
+
+        try { await signInAnonymously(auth); } catch(e) {}
+
+        const masterRef = ref(rtdb, 'tusco_data/master');
+        onValue(masterRef, async (snapshot) => {
+          if (snapshot.exists() && snapshot.val().vehicles && snapshot.val().vehicles.length > 0) {
+            const data = snapshot.val();
+            appState.vehicles = data.vehicles;
+            appState.settings = data.settings || appState.settings;
+            appState.texts = data.texts || {};
+
+            document.getElementById('dbLoadingOverlay').style.display = 'none';
+            window.applyLanguageTexts();
+            renderVehicles();
+          } else {
+            // Veritabanı boşsa ilk 30 aracı Firebase'e otomatik yaz
             try {
-                document.execCommand('copy');
-                callback(true);
-            } catch (err) {
-                callback(false);
+              await set(ref(rtdb, 'tusco_data/master/vehicles'), SEED_VEHICLES);
+              appState.vehicles = SEED_VEHICLES;
+              document.getElementById('dbLoadingOverlay').style.display = 'none';
+              window.applyLanguageTexts();
+              renderVehicles();
+            } catch (seedErr) {
+              onSnapshot(doc(db, 'tusco_config', 'master'), (snap) => {
+                if (snap.exists() && snap.data().vehiclesJson) {
+                  appState.vehicles = JSON.parse(snap.data().vehiclesJson);
+                } else {
+                  appState.vehicles = SEED_VEHICLES;
+                }
+                document.getElementById('dbLoadingOverlay').style.display = 'none';
+                window.applyLanguageTexts();
+                renderVehicles();
+              });
             }
-            document.body.removeChild(tempInput);
-        }
+          }
+        }, () => {
+          onSnapshot(doc(db, 'tusco_config', 'master'), (snap) => {
+            if (snap.exists() && snap.data().vehiclesJson) {
+              appState.vehicles = JSON.parse(snap.data().vehiclesJson);
+            } else {
+              appState.vehicles = SEED_VEHICLES;
+            }
+            document.getElementById('dbLoadingOverlay').style.display = 'none';
+            window.applyLanguageTexts();
+            renderVehicles();
+          });
+        });
 
-        // Domain Adresini Kopyala
-        function copyDomainAddress() {
-            const domainText = document.getElementById('domainDisplay').textContent.trim();
-            copyTextToClipboard(domainText, function() {
-                const copyTextEl = document.getElementById('copyText');
-                const copyIconEl = document.getElementById('copyIcon');
-                copyTextEl.textContent = 'Kopyalandı!';
-                copyIconEl.className = 'fa-solid fa-check text-amber-400';
-                setTimeout(() => {
-                    copyTextEl.textContent = 'Adresi Kopyala';
-                    copyIconEl.className = 'fa-regular fa-copy';
-                }, 2000);
-            });
-        }
+      } catch(err) {
+        statusEl.innerText = `Bağlantı Hatası: ${err.message}. Lütfen internetinizi kontrol edin.`;
+      }
+    }
 
-        // E-Posta Adresini Kopyala
-        function copyEmailAddress() {
-            copyTextToClipboard('tuscorenralservice@gmail.com', function() {
-                const emailTextEl = document.getElementById('emailCopyText');
-                const emailIconEl = document.getElementById('emailCopyIcon');
-                emailTextEl.textContent = 'Kopyalandı!';
-                emailIconEl.className = 'fa-solid fa-check text-amber-400';
-                setTimeout(() => {
-                    emailTextEl.textContent = 'Kopyala';
-                    emailIconEl.className = 'fa-regular fa-copy';
-                }, 2000);
-            });
-        }
-
-        // Sayfa yüklendiğinde başlat
-        window.onload = function() {
-            initDomainDisplay();
-            // Her 4.5 saniyede bir üstteki ana başlığı 5 dil arasında sırayla döndürür
-            cycleInterval = setInterval(() => {
-                const nextIndex = (currentLangIndex + 1) % translations.length;
-                highlightLang(nextIndex);
-            }, 4500);
-        };
-    </script>
+    appState.vehicles = SEED_VEHICLES;
+    renderVehicles();
+    initFirebaseHome();
+  </script>
 </body>
 </html>

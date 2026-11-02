@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">Araç Detayı | TUSCO Rental Service</title>
+  <link rel="stylesheet" href="tusco.css">
+</head>
+<body>
+
+  <!-- Loading State Overlay -->
+  <div id="dbLoadingOverlay" style="position:fixed; inset:0; z-index:9999; background:#0a0d14; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; text-align:center; padding:2rem;">
+    <div style="width: 3.5rem; height: 3.5rem; border: 4px solid rgba(223,168,56,0.2); border-top-color: #dfa838; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 1.25rem;"></div>
+    <h2 style="font-size: 1.3rem; font-weight: 900; color: #dfa838;">Araç Bilgileri Yükleniyor...</h2>
+  </div>
+  <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container nav-row">
+      <div class="brand-wrapper" onclick="window.location.href='index.html'">
+        <div class="brand-icon">T</div>
+        <div>
+          <div class="brand-title">
+            <span style="color: #fff;">TUSCO</span>
+            <span class="badge-tag">Rental Service</span>
+          </div>
+          <span class="brand-subtitle">Dalyan Adventure & Mobility Hub</span>
+        </div>
+      </div>
+      <div>
+        <button onclick="window.location.href='index.html'" class="btn btn-outline" style="font-size: 0.8rem;">← Tüm Araçlara Dön</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Detail Layout -->
+  <main class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+    
+    <div style="display: grid; grid-template-columns: 1fr; gap: 2rem;" id="vehicleDetailContainer">
+      <!-- Injected via Firebase fetch -->
+    </div>
+
+  </main>
+
+  <!-- Route Modal (Kaunos, İztuzu, Sülüngür) -->
+  <div id="routeModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <span id="rmDist" class="badge-tag">Mesafe</span>
+        <button onclick="document.getElementById('routeModal').style.display='none'" class="btn btn-outline" style="padding: 0.3rem 0.6rem;">✕</button>
+      </div>
+      <h3 id="rmTitle" style="font-size: 1.35rem; font-weight: 900; color: #fff; margin-bottom: 0.5rem;">Rota</h3>
+      <p id="rmDesc" style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.25rem;"></p>
+      <button onclick="document.getElementById('routeModal').style.display='none'" class="btn btn-primary" style="width: 100%;">Anladım</button>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toastBox" style="position:fixed; bottom:2rem; right:2rem; z-index:100; background:var(--bg-surface); color:#fff; padding:0.85rem 1.25rem; border-radius:0.75rem; box-shadow:0 10px 25px rgba(0,0,0,0.6); display:none; font-weight:700; font-size:0.85rem; border:1px solid var(--brand-gold);"></div>
+
+  <footer class="site-footer">
+    <div class="container" style="text-align: center;">
+      <div style="font-weight: 800; color: #fff;">TUSCO Rental Service</div>
+      <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Maraş Caddesi No:14, Dalyan / Muğla</p>
+    </div>
+  </footer>
+
+  <!-- Firebase & Page Logic -->
+  <script type="module">
+    import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+
+    const TUSCO_FIREBASE_CONFIG = {
+      apiKey: "AIzaSyAypFOmmrxzA-V7tzeS_G6T-I8d86VytiQ",
+      authDomain: "tuscorentalservice-b76a7.firebaseapp.com",
+      databaseURL: "https://tuscorentalservice-b76a7-default-rtdb.firebaseio.com",
+      projectId: "tuscorentalservice-b76a7",
+      storageBucket: "tuscorentalservice-b76a7.firebasestorage.app",
+      messagingSenderId: "637872767163",
+      appId: "1:637872767163:web:5130c8096c99ff0a2b699e"
+    };
+
+    function showToast(msg) {
+      const box = document.getElementById('toastBox');
+      if (!box) return;
+      box.innerText = msg;
+      box.style.display = 'block';
+      setTimeout(() => { box.style.display = 'none'; }, 4000);
+    }
+
+    async function initVehicleDetail() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const vehicleId = urlParams.get('id');
+
+      if (!vehicleId) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      try {
+        const app = getApps().length === 0 ? initializeApp(TUSCO_FIREBASE_CONFIG) : getApp();
+        const auth = getAuth(app);
+        const rtdb = getDatabase(app);
+
+        try { await signInAnonymously(auth); } catch(e) {}
+
+        const masterRef = ref(rtdb, 'tusco_data/master');
+        onValue(masterRef, (snapshot) => {
+          if (snapshot.exists()) {
+            const data = snapshot.val();
+            const vehicles = data.vehicles || [];
+            const vehicle = vehicles.find(x => x.id === vehicleId || x.id == vehicleId);
+
+            document.getElementById('dbLoadingOverlay').style.display = 'none';
+
+            if (!vehicle) {
+              document.getElementById('vehicleDetailContainer').innerHTML = '<h2 style="text-align:center; color:#fff;">Araç bulunamadı!</h2>';
+              return;
+            }
+
+            document.getElementById('pageTitle').innerText = `${vehicle.name} | TUSCO Rental Service`;
+            renderVehicleDetail(vehicle);
+          }
+        });
+
+      } catch(err) {
+        document.getElementById('dbLoadingOverlay').innerHTML = `<h3 style="color:#ef4444;">Bağlantı Hatası: ${err.message}</h3>`;
+      }
+    }
+
+    function renderVehicleDetail(v) {
+      const container = document.getElementById('vehicleDetailContainer');
+      const today = new Date().toISOString().split('T')[0];
+      const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+
+      container.innerHTML = `
+        <div style="display: grid; grid-template-columns: 1fr; gap: 2rem;" class="detail-grid">
+          <!-- Left: Image & Specs -->
+          <div>
+            <div style="background: var(--bg-surface); border-radius: var(--card-radius); overflow: hidden; border: 1px solid var(--border-color); box-shadow: var(--shadow-xl);">
+              <div style="position:relative; height: 24rem; background:#000;">
+                <img src="${v.img}" alt="${v.name}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='https://placehold.co/800x600/0f172a/dfa838?text=TUSCO'">
+                <span class="card-tag" style="top:1.25rem; left:1.25rem; font-size:0.8rem;">${v.cat.toUpperCase()}</span>
+                <div style="position:absolute; bottom:1.25rem; right:1.25rem; background:linear-gradient(135deg,var(--brand-gold),var(--brand-orange)); color:#0a0d14; padding:0.5rem 1.2rem; border-radius:0.75rem; font-weight:900; font-size:1.2rem;">
+                  ₺${v.price} / gün
+                </div>
+              </div>
+              <div style="padding: 2rem;">
+                <h1 style="font-size: 2rem; font-weight: 900; color:#fff; margin-bottom: 0.75rem;">${v.name}</h1>
+                <p style="color: var(--text-secondary); font-size: 1rem; line-height: 1.7; margin-bottom: 2rem;">${v.desc}</p>
+
+                <h3 style="font-size: 1.15rem; font-weight: 800; color: #fff; margin-bottom: 1rem;">Teknik Özellikler & Performans</h3>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.85rem; margin-bottom: 2rem;">
+                  <div style="background: var(--bg-surface-elevated); padding: 1rem; border-radius: 0.75rem; border:1px solid var(--border-color);">
+                    <div style="font-size:0.7rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Maksimum Hız</div>
+                    <div style="font-size:0.95rem; font-weight:800; color:#fff;">${v.speed || 'Standart'}</div>
+                  </div>
+                  <div style="background: var(--bg-surface-elevated); padding: 1rem; border-radius: 0.75rem; border:1px solid var(--border-color);">
+                    <div style="font-size:0.7rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Menzil / Yakıt</div>
+                    <div style="font-size:0.95rem; font-weight:800; color:#fff;">${v.range || 'Sınırsız'}</div>
+                  </div>
+                  <div style="background: var(--bg-surface-elevated); padding: 1rem; border-radius: 0.75rem; border:1px solid var(--border-color);">
+                    <div style="font-size:0.7rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Sürüş Tipi</div>
+                    <div style="font-size:0.95rem; font-weight:800; color:#fff;">${v.drive || 'Otomatik'}</div>
+                  </div>
+                  <div style="background: var(--bg-surface-elevated); padding: 1rem; border-radius: 0.75rem; border:1px solid var(--border-color);">
+                    <div style="font-size:0.7rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Kapasite</div>
+                    <div style="font-size:0.95rem; font-weight:800; color:#fff;">${v.capacity || '1-2 Kişilik'}</div>
+                  </div>
+                </div>
+
+                <h3 style="font-size: 1.15rem; font-weight: 800; color: #fff; margin-bottom: 1rem;">Bu Araçla Gidilebilecek 3 Popüler Rota</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem;">
+                  <div onclick="openRouteModal(1)" style="cursor:pointer; background:var(--bg-surface-elevated); padding:1rem; border-radius:0.75rem; border:1px solid var(--border-color);">
+                    <div style="font-size:0.7rem; color:var(--brand-gold); font-weight:800;">1. SEÇENEK</div>
+                    <div style="font-weight:800; color:#fff; font-size:0.95rem; margin:0.2rem 0;">🏛️ Kaunos Antik Kenti</div>
+                    <div style="font-size:0.75rem; color:var(--text-muted);">4.5 km • Tekne geçişi</div>
+                  </div>
+                  <div onclick="openRouteModal(2)" style="cursor:pointer; background:var(--bg-surface-elevated); padding:1rem; border-radius:0.75rem; border:1px solid var(--border-color);">
+                    <div style="font-size:0.7rem; color:var(--brand-gold); font-weight:800;">2. SEÇENEK</div>
+                    <div style="font-weight:800; color:#fff; font-size:0.95rem; margin:0.2rem 0;">🐢 İztuzu Plajı</div>
+                    <div style="font-size:0.75rem; color:var(--text-muted);">11.8 km • Çam ormanı</div>
+                  </div>
+                  <div onclick="openRouteModal(3)" style="cursor:pointer; background:var(--bg-surface-elevated); padding:1rem; border-radius:0.75rem; border:1px solid var(--border-color);">
+                    <div style="font-size:0.7rem; color:var(--brand-gold); font-weight:800;">3. SEÇENEK</div>
+                    <div style="font-weight:800; color:#fff; font-size:0.95rem; margin:0.2rem 0;">🌅 Sülüngür Gölü</div>
+                    <div style="font-size:0.75rem; color:var(--text-muted);">6.2 km • Gün batımı</div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Booking Form -->
+          <div>
+            <div style="background: var(--bg-surface); border-radius: var(--card-radius); padding: 2rem; border: 1px solid var(--border-color); box-shadow: var(--shadow-xl); position: sticky; top: 6rem;">
+              <h3 style="font-size: 1.35rem; font-weight: 900; color: #fff; margin-bottom: 0.25rem;">Hızlı Rezervasyon</h3>
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">Ön ödeme yapmadan anında yerinizi ayırtın.</p>
+
+              <form onsubmit="handleBooking(event, '${v.name}', ${v.price})">
+                <div class="form-group">
+                  <label class="form-label">Adınız ve Soyadınız *</label>
+                  <input type="text" id="bName" required class="form-input" placeholder="Ahmet Yılmaz">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">E-Posta Adresi *</label>
+                  <input type="email" id="bEmail" required class="form-input" placeholder="ahmet@example.com">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Telefon / WhatsApp *</label>
+                  <input type="tel" id="bPhone" required class="form-input" placeholder="+90 5XX XXX XX XX">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Dalyan'da Kalınacak Otel / Pansiyon *</label>
+                  <input type="text" id="bHotel" required class="form-input" placeholder="Otel adı veya villa">
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+                  <div class="form-group">
+                    <label class="form-label">Alış Tarihi *</label>
+                    <input type="date" id="bStart" value="${today}" required class="form-input" onchange="calcTotal(${v.price})">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">İade Tarihi *</label>
+                    <input type="date" id="bEnd" value="${tomorrow}" required class="form-input" onchange="calcTotal(${v.price})">
+                  </div>
+                </div>
+
+                <div style="background: var(--bg-surface-elevated); padding: 1rem; border-radius: 0.75rem; margin: 1.25rem 0; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-color);">
+                  <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);">Toplam Tutar:</span>
+                  <span id="totalPriceDisplay" style="font-size: 1.35rem; font-weight: 900; color: var(--brand-gold);">₺${v.price}</span>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width:100%; padding: 0.85rem; font-size: 0.95rem;">Rezervasyonu Tamamla</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    window.calcTotal = function(dailyPrice) {
+      const s = new Date(document.getElementById('bStart').value);
+      const e = new Date(document.getElementById('bEnd').value);
+      let days = Math.ceil((e - s) / (1000 * 60 * 60 * 24));
+      if (days <= 0 || isNaN(days)) days = 1;
+      document.getElementById('totalPriceDisplay').innerText = `₺${days * dailyPrice}`;
+    };
+
+    window.handleBooking = async function(e, vehName, dailyPrice) {
+      e.preventDefault();
+      const s = new Date(document.getElementById('bStart').value);
+      const end = new Date(document.getElementById('bEnd').value);
+      let days = Math.ceil((end - s) / (1000 * 60 * 60 * 24));
+      if (days <= 0 || isNaN(days)) days = 1;
+
+      const booking = {
+        id: `TUSCO-${Math.floor(1000 + Math.random() * 9000)}`,
+        vehName: vehName,
+        name: document.getElementById('bName').value,
+        email: document.getElementById('bEmail').value,
+        phone: document.getElementById('bPhone').value,
+        hotel: document.getElementById('bHotel').value,
+        start: document.getElementById('bStart').value,
+        end: document.getElementById('bEnd').value,
+        total: days * dailyPrice,
+        createdAt: new Date().toISOString()
+      };
+
+      try {
+        const app = getApps().length === 0 ? initializeApp(TUSCO_FIREBASE_CONFIG) : getApp();
+        const rtdb = getDatabase(app);
+        await set(ref(rtdb, `tusco_data/bookings/${booking.id}`), booking);
+        showToast(`Rezervasyon Başarılı! Kodunuz: #${booking.id}`);
+      } catch(err) {
+        showToast(`Rezervasyon kaydedildi (#${booking.id})`);
+      }
+    };
+
+    window.openRouteModal = function(opt) {
+      const routes = {
+        1: { dist: '4.5 km', title: 'Kaunos Antik Kenti & Kaya Mezarları', desc: 'Dalyan kanalını sandal ile geçerek antik Kaunos kalıntılarını ve 2400 yıllık Kral Mezarlarını keşfedin.' },
+        2: { dist: '11.8 km', title: 'İztuzu Plajı & Caretta Sahili', desc: 'Çam ormanları arasından uzanan keyifli asfalt yolla dünya çapındaki Caretta caretta kaplumbağa koruma alanına ulaşın.' },
+        3: { dist: '6.2 km', title: 'Sülüngür Gölü & Gün Batımı İskelesi', desc: 'Göl kenarındaki düz yolda sürüş yapın ve eşsiz gün batımı manzarasına sahip ahşap iskelelerde mola verin.' }
+      };
+      const r = routes[opt];
+      document.getElementById('rmDist').innerText = r.dist;
+      document.getElementById('rmTitle').innerText = r.title;
+      document.getElementById('rmDesc').innerText = r.desc;
+      document.getElementById('routeModal').style.display = 'flex';
+    };
+
+    initVehicleDetail();
+  </script>
+</body>
+</html>

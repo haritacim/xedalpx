@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /yonet.html
+
+Sitemap: https://dalyancarrental.com/sitemap.xml
