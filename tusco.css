@@ -10,7 +10,7 @@
 
   /* Zemin & yüzeyler (sıcak koyu) */
   --bg-primary: #14100e;
-  --bg-surface: #1d1815;
+  --bg-surface: #ff7d7d91;
   --bg-surface-elevated: #272019;
   --border-color: #3a3028;
   --border-soft: rgba(255, 244, 230, 0.08);
@@ -94,7 +94,6 @@ button, input, select, textarea { font-family: inherit; }
   position: sticky;
   top: 0;
   z-index: 40;
-  background: rgba(20, 16, 14, 0.78);
   -webkit-backdrop-filter: saturate(160%) blur(14px);
   backdrop-filter: saturate(160%) blur(14px);
   border-bottom: 1px solid var(--border-soft);
@@ -136,7 +135,7 @@ button, input, select, textarea { font-family: inherit; }
   letter-spacing: 0.06em;
   font-weight: 800;
 }
-.brand-subtitle { font-size: 0.64rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; display: block; }
+.brand-subtitle { font-size: 0.64rem; color: #000000; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; display: block; }
 .nav-actions { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
 
 /* ---------- Butonlar ---------- */
@@ -225,7 +224,7 @@ button, input, select, textarea { font-family: inherit; }
   font-weight: 700;
   white-space: nowrap;
   background: rgba(255, 244, 230, 0.04);
-  color: var(--text-secondary);
+  color: #ef8d6b;
   border: 1px solid var(--border-color);
   cursor: pointer;
   transition: all 0.2s var(--ease);
