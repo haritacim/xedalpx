@@ -1,50 +1,51 @@
 /* ==========================================================================
-   TUSCO Rental Service - tusco.css  (v2 · Kiremit & Limon)
+   TUSCO Rental Service - tusco.css  (v3 · Tropik Yağmur Ormanı)
    Tüm sayfaların TEK stil kaynağıdır (index, rotalar, yonet).
-   Renk mantığı:  Kiremit = eylem (butonlar)   |   Limon = vurgu / seçili durum / fiyat
-   Zemin:         Sıcak espresso tonları (Dalyan kiremit çatıları + güneş + limon bahçeleri)
+   Renk mantığı:  Hibiscus pembesi = eylem (butonlar) | Turkuaz-nane = vurgu / seçili | Mango = fiyat
+   Zemin:         Yağmur ormanı yeşili + jungle.svg arka planı
    ========================================================================== */
 
 :root {
   --font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
-  /* Zemin & yüzeyler (sıcak koyu) */
-  --bg-primary: #14100e;
-  --bg-surface: #ff7d7d91;
-  --bg-surface-elevated: #272019;
-  --border-color: #3a3028;
-  --border-soft: rgba(255, 244, 230, 0.08);
+  /* Zemin & yüzeyler (yağmur ormanı yeşili) */
+  --bg-primary: #06130d;
+  --bg-surface: #0c2017;
+  --bg-surface-elevated: #133026;
+  --border-color: #25493a;
+  --border-soft: rgba(235, 255, 245, 0.09);
 
   /* Metin */
-  --text-primary: #fbf6ee;
-  --text-secondary: #d9cfc2;
-  --text-muted: #a3978a;
+  --text-primary: #f1fbf5;
+  --text-secondary: #cfe5d8;
+  --text-muted: #8fb3a1;
 
-  /* Marka */
-  --terracotta: #c2502e;          /* beyaz metinle 4.7:1 */
-  --terracotta-hover: #ac4426;
-  --terracotta-soft: #ef8d6b;     /* koyu zeminde metin/ikon olarak */
-  --lemon: #f5d547;
-  --lemon-hover: #ffe36e;
-  --ink: #1a1410;                 /* limon üstündeki koyu metin */
+  /* Marka: Hibiscus (eylem) · Turkuaz-nane (vurgu) · Mango (fiyat) */
+  --action: #cf2f68;              /* beyaz metinle 4.9:1 */
+  --action-hover: #b82659;
+  --action-soft: #ff8fb8;
+  --accent: #4ff0c4;
+  --accent-hover: #86ffdc;
+  --mango: #ffc23d;
+  --ink: #05150e;                 /* açık renkler üstündeki koyu metin */
 
   /* Eski sayfalardaki isimler (geriye uyumluluk) */
-  --brand-gold: var(--lemon);
-  --brand-gold-hover: var(--lemon-hover);
-  --brand-orange: var(--terracotta);
-  --brand-orange-hover: var(--terracotta-hover);
-  --brand-color: var(--lemon);
-  --brand-hover: var(--lemon-hover);
+  --brand-gold: var(--accent);
+  --brand-gold-hover: var(--accent-hover);
+  --brand-orange: var(--action);
+  --brand-orange-hover: var(--action-hover);
+  --brand-color: var(--accent);
+  --brand-hover: var(--accent-hover);
   --brand-text: var(--ink);
 
-  --danger-color: #f0564a;
-  --success-color: #34c38f;
+  --danger-color: #ff6b5e;
+  --success-color: #34d399;
   --whatsapp: #25d366;
 
   --card-radius: 1.25rem;
   --radius-md: 0.8rem;
   --shadow-xl: 0 18px 40px -14px rgba(0, 0, 0, 0.7);
-  --shadow-glow: 0 12px 34px -10px rgba(194, 80, 46, 0.55);
+  --shadow-glow: 0 12px 34px -10px rgba(207, 47, 104, 0.6);
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
@@ -63,29 +64,29 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
-/* Dalyan fotoğrafı: sabit arka plan mobilde takılmasın diye pseudo-element üzerinde */
+/* Yağmur ormanı: jungle.svg (katmanlı palmiye/muz yaprakları + güneş huzmeleri).
+   Gerçek fotoğraf isterseniz url('jungle.svg') yerine kendi görselinizi yazın. */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(60rem 30rem at 85% -10%, rgba(194, 80, 46, 0.22), transparent 60%),
-    radial-gradient(50rem 28rem at 0% 0%, rgba(245, 213, 71, 0.10), transparent 60%),
-    linear-gradient(rgb(20, 16, 14, 30%), rgba(20, 16, 14, 0.96)),
-    url('./backone.webp') center / cover no-repeat;
+    linear-gradient(180deg, rgba(4, 17, 10, 0.25) 0%, rgba(4, 17, 10, 0.05) 35%, rgba(4, 17, 10, 0.45) 100%),
+    url('jungle.svg') center / cover no-repeat,
+    var(--bg-primary);
 }
 
 h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.015em; }
 a { text-decoration: none; color: inherit; }
 img { max-width: 100%; }
 button, input, select, textarea { font-family: inherit; }
-::selection { background: var(--lemon); color: var(--ink); }
+::selection { background: var(--accent); color: var(--ink); }
 
-:focus-visible { outline: 2px solid var(--lemon); outline-offset: 3px; border-radius: 6px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
 
 /* ince, sıcak kaydırma çubuğu */
-* { scrollbar-width: thin; scrollbar-color: #4a3d33 transparent; }
+* { scrollbar-width: thin; scrollbar-color: #2f5a48 transparent; }
 
 .container { width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 1.25rem; }
 
@@ -94,6 +95,7 @@ button, input, select, textarea { font-family: inherit; }
   position: sticky;
   top: 0;
   z-index: 40;
+  background: rgba(5, 21, 14, 0.78);
   -webkit-backdrop-filter: saturate(160%) blur(14px);
   backdrop-filter: saturate(160%) blur(14px);
   border-bottom: 1px solid var(--border-soft);
@@ -112,30 +114,30 @@ button, input, select, textarea { font-family: inherit; }
   width: 2.75rem;
   height: 2.75rem;
   border-radius: 0.9rem;
-  background: var(--terracotta);
-  color: var(--lemon);
+  background: var(--action);
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 900;
   font-size: 1.3rem;
   letter-spacing: -0.02em;
-  box-shadow: inset 0 0 0 2px rgba(245, 213, 71, 0.35), var(--shadow-glow);
+  box-shadow: inset 0 0 0 2px rgba(79, 240, 196, 0.35), var(--shadow-glow);
   flex-shrink: 0;
 }
 .brand-title { font-size: 1.15rem; font-weight: 800; letter-spacing: -0.01em; display: flex; align-items: center; gap: 0.45rem; }
 .badge-tag {
   font-size: 0.62rem;
   padding: 0.18rem 0.55rem;
-  background: rgba(245, 213, 71, 0.14);
-  color: var(--lemon);
-  border: 1px solid rgba(245, 213, 71, 0.35);
+  background: rgba(79, 240, 196, 0.14);
+  color: var(--accent);
+  border: 1px solid rgba(79, 240, 196, 0.35);
   border-radius: 9999px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   font-weight: 800;
 }
-.brand-subtitle { font-size: 0.64rem; color: #000000; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; display: block; }
+.brand-subtitle { font-size: 0.64rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; display: block; }
 .nav-actions { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
 
 /* ---------- Butonlar ---------- */
@@ -156,17 +158,17 @@ button, input, select, textarea { font-family: inherit; }
 .btn:active { transform: translateY(1px) scale(0.99); }
 
 .btn-primary {
-  background: var(--terracotta);
+  background: var(--action);
   color: #fff;
   box-shadow: var(--shadow-glow), inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
-.btn-primary:hover { background: var(--terracotta-hover); transform: translateY(-1px); }
+.btn-primary:hover { background: var(--action-hover); transform: translateY(-1px); }
 
-.btn-outline { background: rgba(255, 244, 230, 0.04); color: var(--text-primary); border-color: var(--border-color); }
-.btn-outline:hover { background: rgba(255, 244, 230, 0.09); border-color: var(--lemon); }
+.btn-outline { background: rgba(235, 255, 245, 0.04); color: var(--text-primary); border-color: var(--border-color); }
+.btn-outline:hover { background: rgba(235, 255, 245, 0.09); border-color: var(--accent); }
 
-.btn-accent { background: rgba(245, 213, 71, 0.10); color: var(--lemon); border-color: rgba(245, 213, 71, 0.45); }
-.btn-accent:hover { background: var(--lemon); color: var(--ink); }
+.btn-accent { background: rgba(79, 240, 196, 0.10); color: var(--accent); border-color: rgba(79, 240, 196, 0.45); }
+.btn-accent:hover { background: var(--accent); color: var(--ink); }
 
 /* ---------- Hero ---------- */
 .hero { padding: clamp(3rem, 7vw, 5.5rem) 1.25rem clamp(2rem, 4vw, 3rem); text-align: center; }
@@ -176,9 +178,9 @@ button, input, select, textarea { font-family: inherit; }
   gap: 0.5rem;
   padding: 0.42rem 1.1rem;
   border-radius: 9999px;
-  background: rgba(245, 213, 71, 0.12);
-  border: 1px solid rgba(245, 213, 71, 0.4);
-  color: var(--lemon);
+  background: rgba(79, 240, 196, 0.12);
+  border: 1px solid rgba(79, 240, 196, 0.4);
+  color: var(--accent);
   font-size: 0.74rem;
   font-weight: 800;
   margin-bottom: 1.25rem;
@@ -202,7 +204,7 @@ button, input, select, textarea { font-family: inherit; }
   gap: 0.5rem;
   padding: 0.55rem 1rem;
   border-radius: 9999px;
-  background: rgba(255, 244, 230, 0.05);
+  background: rgba(235, 255, 245, 0.05);
   border: 1px solid var(--border-soft);
   font-size: 0.8rem;
   color: var(--text-primary);
@@ -223,14 +225,14 @@ button, input, select, textarea { font-family: inherit; }
   font-size: 0.8rem;
   font-weight: 700;
   white-space: nowrap;
-  background: rgba(255, 244, 230, 0.04);
-  color: #ef8d6b;
+  background: rgba(235, 255, 245, 0.04);
+  color: var(--text-secondary);
   border: 1px solid var(--border-color);
   cursor: pointer;
   transition: all 0.2s var(--ease);
 }
-.tab-btn:hover { border-color: var(--lemon); color: #fff; }
-.tab-btn.active { background: var(--lemon); color: var(--ink); border-color: var(--lemon); box-shadow: 0 8px 22px -10px rgba(245, 213, 71, 0.7); }
+.tab-btn:hover { border-color: var(--accent); color: #fff; }
+.tab-btn.active { background: var(--accent); color: var(--ink); border-color: var(--accent); box-shadow: 0 8px 22px -10px rgba(79, 240, 196, 0.7); }
 
 .grid-4, .grid-3 { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; margin-bottom: 3.5rem; }
 @media (min-width: 640px) { .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
@@ -242,7 +244,7 @@ button, input, select, textarea { font-family: inherit; }
 
 /* ---------- Kartlar ---------- */
 .card {
-  background: linear-gradient(180deg, rgba(255, 244, 230, 0.035), rgba(255, 244, 230, 0.01)), var(--bg-surface);
+  background: linear-gradient(180deg, rgba(235, 255, 245, 0.035), rgba(235, 255, 245, 0.01)), var(--bg-surface);
   border-radius: var(--card-radius);
   border: 1px solid var(--border-soft);
   overflow: hidden;
@@ -252,10 +254,10 @@ button, input, select, textarea { font-family: inherit; }
   justify-content: space-between;
   transition: transform 0.3s var(--ease), border-color 0.3s, box-shadow 0.3s;
 }
-.card:hover { transform: translateY(-5px); border-color: rgba(245, 213, 71, 0.55); box-shadow: 0 22px 44px -16px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(245, 213, 71, 0.15); }
+.card:hover { transform: translateY(-5px); border-color: rgba(79, 240, 196, 0.55); box-shadow: 0 22px 44px -16px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(79, 240, 196, 0.15); }
 
-.card-image-box { position: relative; height: 13rem; background: #0e0b09; overflow: hidden; }
-.card-image-box::after { content: ""; position: absolute; inset: auto 0 0 0; height: 55%; background: linear-gradient(to top, rgba(20, 16, 14, 0.85), transparent); pointer-events: none; }
+.card-image-box { position: relative; height: 13rem; background: #04100a; overflow: hidden; }
+.card-image-box::after { content: ""; position: absolute; inset: auto 0 0 0; height: 55%; background: linear-gradient(to top, rgba(5, 21, 14, 0.85), transparent); pointer-events: none; }
 .card-img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s var(--ease); }
 .card:hover .card-img { transform: scale(1.06); }
 
@@ -269,9 +271,9 @@ button, input, select, textarea { font-family: inherit; }
   font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.02em;
-  background: rgba(20, 16, 14, 0.62);
-  color: var(--lemon);
-  border: 1px solid rgba(245, 213, 71, 0.35);
+  background: rgba(5, 21, 14, 0.62);
+  color: var(--accent);
+  border: 1px solid rgba(79, 240, 196, 0.35);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }
@@ -284,13 +286,13 @@ button, input, select, textarea { font-family: inherit; }
   border-radius: 9999px;
   font-size: 0.82rem;
   font-weight: 900;
-  background: var(--lemon);
+  background: var(--mango);
   color: var(--ink);
   box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.7);
 }
 .card-body { padding: 1.15rem 1.25rem 0.5rem; display: flex; flex-direction: column; gap: 0.45rem; }
 .card-title { font-size: 1.05rem; font-weight: 800; color: #fff; line-height: 1.3; letter-spacing: -0.01em; }
-.card-title a:hover { color: var(--lemon); }
+.card-title a:hover { color: var(--accent); }
 .card-desc { font-size: 0.82rem; color: var(--text-secondary); display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .card-footer { padding: 0.75rem 1.25rem 1.25rem; }
 
@@ -300,13 +302,13 @@ button, input, select, textarea { font-family: inherit; }
   padding: clamp(1.75rem, 4vw, 2.75rem);
   text-align: center;
   border-radius: calc(var(--card-radius) + 0.25rem);
-  border: 1px solid rgba(245, 213, 71, 0.35);
+  border: 1px solid rgba(79, 240, 196, 0.35);
   background:
-    radial-gradient(40rem 14rem at 50% 0%, rgba(194, 80, 46, 0.28), transparent 70%),
+    radial-gradient(40rem 14rem at 50% 0%, rgba(207, 47, 104, 0.28), transparent 70%),
     var(--bg-surface);
   box-shadow: var(--shadow-xl);
 }
-.promo-title { font-size: clamp(1.4rem, 3vw, 1.9rem); font-weight: 900; letter-spacing: -0.02em; color: var(--lemon); margin-bottom: 0.5rem; }
+.promo-title { font-size: clamp(1.4rem, 3vw, 1.9rem); font-weight: 900; letter-spacing: -0.02em; color: var(--accent); margin-bottom: 0.5rem; }
 .promo-sub { color: var(--text-secondary); font-size: 0.95rem; max-width: 650px; margin: 0 auto 1.5rem; }
 
 .section-title { font-size: clamp(1.45rem, 3.2vw, 1.9rem); font-weight: 900; letter-spacing: -0.02em; color: #fff; }
@@ -326,51 +328,51 @@ button, input, select, textarea { font-family: inherit; }
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
-.form-input::placeholder, .form-textarea::placeholder { color: #7d7266; }
-.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--lemon); box-shadow: 0 0 0 3px rgba(245, 213, 71, 0.18); }
+.form-input::placeholder, .form-textarea::placeholder { color: #6f9484; }
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(79, 240, 196, 0.18); }
 .form-input[type="date"] { color-scheme: dark; }
-.form-select { cursor: pointer; font-weight: 700; appearance: none; -webkit-appearance: none; padding-right: 2.2rem; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%23f5d547' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.85rem center; }
+.form-select { cursor: pointer; font-weight: 700; appearance: none; -webkit-appearance: none; padding-right: 2.2rem; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%234ff0c4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.85rem center; }
 .nav-actions .form-select { width: auto; }
 
 /* ---------- Modal (rota detayı vb.) ---------- */
-.modal-overlay { position: fixed; inset: 0; z-index: 50; background: rgba(12, 9, 7, 0.82); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; padding: 1rem; }
+.modal-overlay { position: fixed; inset: 0; z-index: 50; background: rgba(3, 12, 8, 0.82); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; padding: 1rem; }
 .modal-content { background: var(--bg-surface); border: 1px solid var(--border-soft); border-radius: var(--card-radius); width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; padding: 1.75rem; box-shadow: var(--shadow-xl); }
 
 /* ---------- WhatsApp ---------- */
 .floating-whatsapp { position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 45; display: flex; align-items: center; gap: 0.6rem; }
 .wa-btn { width: 3.6rem; height: 3.6rem; border-radius: 50%; background: var(--whatsapp); color: #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 12px 28px rgba(37, 211, 102, 0.35); border: none; cursor: pointer; font-size: 1.6rem; transition: transform 0.2s var(--ease); }
 .wa-btn:hover { transform: scale(1.07); }
-.wa-pill { background: rgba(29, 24, 21, 0.9); color: #fff; padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; border: 1px solid var(--border-soft); box-shadow: var(--shadow-xl); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.wa-pill { background: rgba(12, 32, 23, 0.9); color: #fff; padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; border: 1px solid var(--border-soft); box-shadow: var(--shadow-xl); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
 @media (max-width: 520px) { .wa-pill { display: none; } }
 
 /* ---------- Alt bilgi ---------- */
-.site-footer { margin-top: auto; background: #0e0b09; border-top: 1px solid var(--border-soft); color: var(--text-muted); padding: 3rem 1.25rem 2rem; font-size: 0.85rem; }
+.site-footer { margin-top: auto; background: #04100a; border-top: 1px solid var(--border-soft); color: var(--text-muted); padding: 3rem 1.25rem 2rem; font-size: 0.85rem; }
 
 /* ---------- Açılış / yükleme ekranı (rotalar, yonet) ---------- */
 .boot-overlay { position: fixed; inset: 0; z-index: 9999; background: var(--bg-primary); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; color: #fff; }
-.boot-spinner { width: 3.25rem; height: 3.25rem; border: 4px solid rgba(245, 213, 71, 0.18); border-top-color: var(--lemon); border-radius: 50%; animation: spin 0.9s linear infinite; margin-bottom: 1.25rem; }
-.boot-title { font-size: 1.4rem; font-weight: 900; margin-bottom: 0.5rem; color: var(--lemon); }
+.boot-spinner { width: 3.25rem; height: 3.25rem; border: 4px solid rgba(79, 240, 196, 0.18); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.9s linear infinite; margin-bottom: 1.25rem; }
+.boot-title { font-size: 1.4rem; font-weight: 900; margin-bottom: 0.5rem; color: var(--accent); }
 .boot-status { font-size: 0.95rem; color: var(--text-secondary); font-weight: 600; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ==========================================================================
    Araç detay paneli (ana sayfada, sayfa değişmeden açılır)
    ========================================================================== */
-.veh-overlay { position: fixed; inset: 0; z-index: 60; background: #100c0a; overflow-y: auto; -webkit-overflow-scrolling: touch; animation: vehIn 0.28s var(--ease); }
+.veh-overlay { position: fixed; inset: 0; z-index: 60; background: linear-gradient(rgba(5, 21, 14, 0.86), rgba(5, 21, 14, 0.95)), url('jungle.svg') center / cover no-repeat, #06130d; overflow-y: auto; -webkit-overflow-scrolling: touch; animation: vehIn 0.28s var(--ease); }
 .veh-overlay:focus { outline: none; }
 @keyframes vehIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-.veh-bar { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.75rem 1.25rem; background: rgba(20, 16, 14, 0.82); -webkit-backdrop-filter: saturate(160%) blur(14px); backdrop-filter: saturate(160%) blur(14px); border-bottom: 1px solid var(--border-soft); }
+.veh-bar { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.75rem 1.25rem; background: rgba(5, 21, 14, 0.82); -webkit-backdrop-filter: saturate(160%) blur(14px); backdrop-filter: saturate(160%) blur(14px); border-bottom: 1px solid var(--border-soft); }
 .veh-bar .btn { white-space: nowrap; }
 @media (max-width: 520px) { .veh-bar .badge-tag { display: none; } .veh-bar { padding: 0.6rem 1rem; } }
 .veh-wrap { max-width: 1180px; margin: 0 auto; padding: 1.5rem 1.25rem 4rem; }
 .veh-crumbs { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem; display: flex; flex-wrap: wrap; gap: 0.4rem; }
-.veh-crumbs a { color: var(--lemon); font-weight: 700; }
+.veh-crumbs a { color: var(--accent); font-weight: 700; }
 .veh-crumbs a:hover { text-decoration: underline; }
 .veh-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.75rem; }
 @media (min-width: 1024px) { .veh-grid { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); align-items: start; } .veh-side { position: sticky; top: 5.5rem; } }
 .veh-box { background: var(--bg-surface); border: 1px solid var(--border-soft); border-radius: var(--card-radius); box-shadow: var(--shadow-xl); overflow: hidden; }
-.veh-hero { position: relative; height: clamp(14rem, 45vw, 25rem); background: #0e0b09; }
-.veh-hero::after { content: ""; position: absolute; inset: auto 0 0 0; height: 45%; background: linear-gradient(to top, rgba(20, 16, 14, 0.8), transparent); pointer-events: none; }
+.veh-hero { position: relative; height: clamp(14rem, 45vw, 25rem); background: #04100a; }
+.veh-hero::after { content: ""; position: absolute; inset: auto 0 0 0; height: 45%; background: linear-gradient(to top, rgba(5, 21, 14, 0.8), transparent); pointer-events: none; }
 .veh-hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .veh-pad { padding: 1.5rem; }
 .veh-h1 { font-size: clamp(1.55rem, 3.5vw, 2.1rem); font-weight: 900; color: #fff; margin-bottom: 0.6rem; line-height: 1.2; letter-spacing: -0.02em; }
@@ -379,19 +381,19 @@ button, input, select, textarea { font-family: inherit; }
 .veh-specs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
 .veh-spec { background: var(--bg-surface-elevated); padding: 0.95rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-soft); }
 .veh-spec b { display: block; font-size: 0.68rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.15rem; }
-.veh-spec span { font-size: 0.95rem; font-weight: 800; color: var(--lemon); }
+.veh-spec span { font-size: 0.95rem; font-weight: 800; color: var(--accent); }
 .veh-routes { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 0.75rem; }
 .veh-route { background: var(--bg-surface-elevated); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-soft); }
-.veh-route small { color: var(--terracotta-soft); font-weight: 800; font-size: 0.68rem; letter-spacing: 0.05em; }
+.veh-route small { color: var(--action-soft); font-weight: 800; font-size: 0.68rem; letter-spacing: 0.05em; }
 .veh-route strong { display: block; color: #fff; font-size: 0.95rem; margin: 0.2rem 0; }
 .veh-route p { font-size: 0.78rem; color: var(--text-muted); }
 .veh-related { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .veh-related a { padding: 0.5rem 0.95rem; border-radius: 9999px; background: var(--bg-surface-elevated); border: 1px solid var(--border-color); font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); transition: all 0.2s; }
-.veh-related a:hover { border-color: var(--lemon); color: var(--lemon); }
+.veh-related a:hover { border-color: var(--accent); color: var(--accent); }
 .veh-side .form-input { width: 100%; }
-.veh-total { background: var(--bg-surface-elevated); padding: 1rem 1.1rem; border-radius: var(--radius-md); margin: 1.25rem 0; display: flex; justify-content: space-between; align-items: center; border: 1px dashed rgba(245, 213, 71, 0.4); }
-.veh-ok { background: rgba(52, 195, 143, 0.12); border: 1px solid var(--success-color); border-radius: var(--radius-md); padding: 1.25rem; text-align: center; font-weight: 700; }
-.veh-err { background: rgba(240, 86, 74, 0.12); border: 1px solid var(--danger-color); border-radius: var(--radius-md); padding: 0.85rem; margin-top: 1rem; font-size: 0.85rem; }
+.veh-total { background: var(--bg-surface-elevated); padding: 1rem 1.1rem; border-radius: var(--radius-md); margin: 1.25rem 0; display: flex; justify-content: space-between; align-items: center; border: 1px dashed rgba(79, 240, 196, 0.4); }
+.veh-ok { background: rgba(52, 211, 153, 0.12); border: 1px solid var(--success-color); border-radius: var(--radius-md); padding: 1.25rem; text-align: center; font-weight: 700; }
+.veh-err { background: rgba(255, 107, 94, 0.12); border: 1px solid var(--danger-color); border-radius: var(--radius-md); padding: 0.85rem; margin-top: 1rem; font-size: 0.85rem; }
 
 /* ---------- Hareketi azalt ---------- */
 @media (prefers-reduced-motion: reduce) {
