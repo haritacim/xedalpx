@@ -35,7 +35,7 @@
       <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">TUSCO yönetim paneline erişmek için şifrenizi girin.</p>
       <form onsubmit="handleAdminLogin(event)">
         <div class="form-group">
-          <label class="form-label">Admin Şifresi</label>
+          <label class="form-label">Admin Şifresi (Varsayılan: tusco2026)</label>
           <input type="password" id="adminPasswordInput" class="form-input" required placeholder="Şifrenizi yazın...">
         </div>
         <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Giriş Yap</button>
@@ -130,7 +130,7 @@
       appId: "1:637872767163:web:5130c8096c99ff0a2b699e"
     };
 
-    let cloudData = { vehicles: [], routes: [], bookings: [], settings: { adminPass: '' } };
+    let cloudData = { vehicles: [], routes: [], bookings: [], settings: { adminPass: 'tusco2026' } };
     let rtdb = null;
 
     function showToast(msg) {
@@ -167,7 +167,7 @@
     window.handleAdminLogin = function(e) {
       e.preventDefault();
       const pwd = document.getElementById('adminPasswordInput').value;
-      if (pwd === (cloudData.settings.adminPass || '')) {
+      if (pwd === (cloudData.settings.adminPass || 'tusco2026')) {
         sessionStorage.setItem('tusco_admin', 'true');
         document.getElementById('adminAuthBox').style.display = 'none';
         document.getElementById('adminDashboard').style.display = 'block';
@@ -212,7 +212,7 @@
       vGrid.innerHTML = cloudData.vehicles.map(v => `
         <div class="card">
           <div class="card-image-box" style="height:11rem;">
-            <img src="${v.img}" class="card-img" onerror="this.src='https://placehold.co/600x400/272019/f5d547?text=TUSCO'">
+            <img src="${v.img}" class="card-img" onerror="this.src='https://placehold.co/600x400/133026/4ff0c4?text=TUSCO'">
             <span class="card-price">₺${v.price}/gün</span>
           </div>
           <div class="card-body">
@@ -229,7 +229,7 @@
       rGrid.innerHTML = cloudData.routes.map(r => `
         <div class="card">
           <div class="card-image-box" style="height:11rem;">
-            <img src="${r.img}" class="card-img" onerror="this.src='https://placehold.co/600x400/272019/f5d547?text=Route'">
+            <img src="${r.img}" class="card-img" onerror="this.src='https://placehold.co/600x400/133026/4ff0c4?text=Route'">
             <span class="card-tag">${r.dist}</span>
           </div>
           <div class="card-body">
